@@ -65,6 +65,7 @@ console.log(headers.getTip())
 ## Future features
 
 - Validate block difficulty
+- Add unit tests
 
 ## License
 

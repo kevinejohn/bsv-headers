@@ -58,14 +58,7 @@ class Headers {
     if (this.maxReorgDepth > 0 && this.tip && !this.invalidatedBlock) {
       startingHeight = Math.max(0, this.tip.height - this.maxReorgDepth)
       const hash = this.chain[`${startingHeight}`]
-      if (this.headers[hash]) {
-        startingHash = hash
-        console.log(
-          `Processing starting at height: ${startingHeight} ${startingHash}`
-        )
-      } else {
-        console.log(`Missing height!: ${startingHash}`)
-      }
+      if (this.headers[hash]) startingHash = hash
     }
     if (!this.headers[startingHash])
       throw Error(`Missing starting block ${this.startingHash}`)
