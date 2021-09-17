@@ -1,0 +1,28 @@
+{
+  "name": "bsv-headers",
+  "version": "0.0.0",
+  "description": "Determine longest bitcoin chain and query block order",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Bitcoin",
+    "BSV",
+    "Blocks",
+    "Headers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinejohn/bsv-headers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kevinejohn/bsv-headers/issues"
+  },
+  "homepage": "https://github.com/kevinejohn/bsv-headers#readme",
+  "author": "Kevin Johnson",
+  "license": "Open BSV License",
+  "dependencies": {
+    "bsv-minimal": "^0.4.4"
+  }
+}
