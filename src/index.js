@@ -61,7 +61,7 @@ class Headers {
       if (this.headers[hash]) startingHash = hash
     }
     if (!this.headers[startingHash])
-      throw Error(`Missing starting block ${this.startingHash}`)
+      throw Error(`Missing starting block ${startingHash}`)
     let hashes = [startingHash]
     let longestChain
     let height = startingHeight
