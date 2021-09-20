@@ -18,10 +18,10 @@ class Headers {
     this.processed = true
   }
 
-  addHeader({ buf, hash = false }) {
+  addHeader({ buf, header = false, hash = false }) {
     if (hash) hash = hash.toString('hex')
     if (this.headers[hash]) return this.headers[hash]
-    const header = bsv.Header.fromBuffer(buf)
+    if (!header) header = bsv.Header.fromBuffer(buf)
     header.hashHex = hash || header.getHash().toString('hex')
     if (!hash && this.headers[header.hashHex])
       return this.headers[header.hashHex]
