@@ -1,21 +1,29 @@
 const bsv = require('bsv-minimal')
 
-const GENESIS_BLOCK =
-  '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
+const GENESIS_HEADER = '0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c'
 
 class Headers {
   constructor(opts = {}) {
     const {
-      genesisHash = GENESIS_BLOCK,
+      genesisHeader = GENESIS_HEADER,
       invalidBlocks = [],
       maxReorgDepth = 1000
     } = opts
-    this.genesisHash = genesisHash
     this.invalidBlocks = new Set(invalidBlocks)
     this.maxReorgDepth = maxReorgDepth
     this.headers = {}
     this.chain = {}
-    this.processed = true
+
+    let header
+    if (typeof genesisHeader === 'string') {
+      const buf = Buffer.from(genesisHeader, 'hex')
+      header = this.addHeader({ buf })
+    } else if (Buffer.isBuffer(genesisHeader)) {
+      header = this.addHeader({ buf: genesisHeader })
+    } else {
+      header = this.addHeader({ header: genesisHeader })
+    }
+    this.genesisHash = header.hashHex
   }
 
   addHeader({ buf, header = false, hash = false }) {
@@ -25,7 +33,10 @@ class Headers {
     header.hashHex = hash || header.getHash().toString('hex')
     if (!hash && this.headers[header.hashHex])
       return this.headers[header.hashHex]
-    if (this.invalidBlocks.has(header.hashHex)) throw Error(`Invalid block`)
+    if (this.invalidBlocks.has(header.hashHex)) {
+      console.log(`Did not add invalid header: ${header.hashHex}`)
+      return false
+    }
     header.prevHashHex = header.prevHash.toString('hex')
     header.nextHash = []
     const prevHeader = this.headers[header.prevHashHex]
