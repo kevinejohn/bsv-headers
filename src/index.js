@@ -106,6 +106,7 @@ class Headers {
     }
     this.processed = true
     this.invalidatedBlock = false
+    return index || this.headers[this.genesis]
   }
 
   invalidateBlock(hash) {
