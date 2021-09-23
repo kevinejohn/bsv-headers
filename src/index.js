@@ -7,103 +7,99 @@ class Headers {
     const {
       genesisHeader = GENESIS_HEADER,
       invalidBlocks = [],
-      maxReorgDepth = 1000
+      maxReorgDepth = 1000,
     } = opts
     this.invalidBlocks = new Set(invalidBlocks)
     this.maxReorgDepth = maxReorgDepth
     this.headers = {}
     this.chain = {}
+    this.unlinked = {}
+    this.processed = true
+    this.invalidatedBlock = false
 
-    let header
     if (typeof genesisHeader === 'string') {
       const buf = Buffer.from(genesisHeader, 'hex')
-      header = this.addHeader({ buf })
+      this.genesis = this.addHeader({ genesis: true, buf })
     } else if (Buffer.isBuffer(genesisHeader)) {
-      header = this.addHeader({ buf: genesisHeader })
+      this.genesis = this.addHeader({ genesis: true, buf: genesisHeader })
     } else {
-      header = this.addHeader({ header: genesisHeader })
+      this.genesis = this.addHeader({ genesis: true, header: genesisHeader })
     }
-    this.genesisHash = header.hashHex
   }
 
-  addHeader({ buf, header = false, hash = false }) {
+  addHeader({ buf, header = false, hash = false, genesis = false }) {
     if (hash) hash = hash.toString('hex')
-    if (this.headers[hash]) return this.headers[hash]
+    if (this.headers[hash]) return hash
     if (!header) header = bsv.Header.fromBuffer(buf)
-    header.hashHex = hash || header.getHash().toString('hex')
-    if (!hash && this.headers[header.hashHex])
-      return this.headers[header.hashHex]
-    if (this.invalidBlocks.has(header.hashHex)) {
-      console.log(`Did not add invalid header: ${header.hashHex}`)
+    if (!hash) hash = header.getHash().toString('hex')
+    if (this.headers[hash]) return hash
+    if (this.invalidBlocks.has(hash)) {
+      console.log(`Did not add invalid header: ${hash}`)
       return false
     }
-    header.prevHashHex = header.prevHash.toString('hex')
-    header.nextHash = []
-    const prevHeader = this.headers[header.prevHashHex]
-    if (prevHeader) {
-      prevHeader.nextHash.push(header.hashHex)
-      header.processed = true
-    } else {
-      this.missedHeader = true
+    const item = { hash }
+    item.prev = header.prevHash.toString('hex')
+    item.next = []
+    if (!genesis) {
+      const prev = this.headers[item.prev]
+      if (prev) {
+        prev.next.push(hash)
+      } else {
+        this.unlinked[hash] = item
+      }
     }
-    this.headers[header.hashHex] = header
+    this.headers[hash] = item
     this.processed = false
-    return header
+    return hash
   }
 
   process() {
     if (this.processed) return
-    if (this.missedHeader) {
-      for (const hash in this.headers) {
-        const header = this.headers[hash]
-        const prevHeader = this.headers[header.prevHashHex]
-        if (!header.processed && prevHeader) {
-          prevHeader.nextHash.push(header.hashHex)
-          header.processed = true
-        }
+    for (const hash in this.unlinked) {
+      const item = this.unlinked[hash]
+      if (this.headers[item.prev]) {
+        this.headers[item.prev].next.push(hash)
+        delete this.unlinked[hash]
       }
-      this.missedHeader = false
     }
-    let startingHash = this.genesisHash
-    let startingHeight = 0
+    let startingHash = this.genesis
+    let height = 0
     if (this.maxReorgDepth > 0 && this.tip && !this.invalidatedBlock) {
-      startingHeight = Math.max(0, this.tip.height - this.maxReorgDepth)
-      const hash = this.chain[`${startingHeight}`]
+      height = Math.max(0, this.tip.height - this.maxReorgDepth)
+      const hash = this.chain[`${height}`]
       if (this.headers[hash]) startingHash = hash
     }
-    if (!this.headers[startingHash])
+    if (!this.headers[startingHash]) {
       throw Error(`Missing starting block ${startingHash}`)
+    }
     let hashes = [startingHash]
-    let longestChain
-    let height = startingHeight
     while (hashes.length > 0) {
       const nextHashes = []
       for (const hash of hashes) {
-        const header = this.headers[hash]
-        if (header.height < height) {
+        const item = this.headers[hash]
+        if (item.height && item.height < height) {
           console.log(`Detected loop in header ${height} ${hash}`)
           continue // Loop. Ignore header
         }
-        header.height = height
+        item.height = height
         let added = 0
-        for (const hash of header.nextHash) {
+        for (const hash of item.next) {
           if (this.headers[hash]) {
             nextHashes.push(hash)
             added++
           }
         }
-        if (added === 0) longestChain = header
+        if (added === 0) this.tip = item
       }
       hashes = nextHashes
       height++
     }
-    let indexHeader = longestChain
-    while (indexHeader) {
-      if (indexHeader.height < startingHeight) break
-      this.chain[`${indexHeader.height}`] = indexHeader.hashHex
-      indexHeader = this.headers[indexHeader.prevHashHex]
+    let index = this.tip
+    while (index) {
+      if (this.chain[`${index.height}`] === index.hash) break
+      this.chain[`${index.height}`] = index.hash
+      index = this.headers[index.prev]
     }
-    this.tip = longestChain
     this.processed = true
     this.invalidatedBlock = false
   }
@@ -112,10 +108,11 @@ class Headers {
     hash = hash.toString('hex')
     const header = this.headers[hash]
     delete this.headers[hash]
+    delete this.unlinked[hash]
     if (header) {
       console.log(`Invalidating block ${header.height}, ${hash}`)
       const heightHash = this.chain[`${header.height}`]
-      if (header.hashHex === heightHash) {
+      if (hash === heightHash) {
         for (let height = header.height; height <= this.tip.height; height++) {
           const hash = this.chain[`${height}`]
           console.log(`Invalidating block ${height}, ${hash}`)
@@ -123,19 +120,19 @@ class Headers {
           delete this.headers[hash]
         }
       }
+      this.invalidBlocks.add(hash)
+      this.processed = false
+      this.invalidatedBlock = true
     } else {
       console.log(`Invalidating block ${hash}`)
     }
-    this.invalidBlocks.add(hash)
-    this.processed = false
-    this.invalidatedBlock = true
   }
 
   getHeight(hash = false) {
     this.process()
     if (hash) {
       hash = hash.toString('hex')
-      if (!this.headers[hash]) throw Error(`Missing header`)
+      if (!this.headers[hash]) throw Error(`No height`)
       return this.headers[hash].height
     } else {
       return this.getTip().height
@@ -145,23 +142,14 @@ class Headers {
   getHash(height) {
     this.process()
     const hash = this.chain[`${height}`]
-    const header = this.headers[hash]
-    if (!header) throw Error(`Missing height`)
-    return header.hashHex
-  }
-
-  getHeader({ height = false, hash = false }) {
-    if (typeof height === 'number') hash = this.getHash(height)
-    const header = this.headers[hash]
-    if (!header) throw Error(`Missing header`)
-    return header
+    if (!this.headers[hash]) throw Error(`No hash`)
+    return hash
   }
 
   getTip() {
     this.process()
     if (!this.tip) throw Error(`No tip`)
-    const { hashHex: hash, height } = this.tip
-    return { hash, height }
+    return this.tip
   }
 }
 
