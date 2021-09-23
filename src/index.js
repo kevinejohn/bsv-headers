@@ -1,38 +1,39 @@
 const bsv = require('bsv-minimal')
 
-const GENESIS_HEADER = '0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c'
+const GENESIS_HEADER =
+  '0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c'
 
 class Headers {
   constructor(opts = {}) {
     const {
       genesisHeader = GENESIS_HEADER,
       invalidBlocks = [],
-      maxReorgDepth = 1000,
+      maxReorgDepth = 1000
     } = opts
     this.invalidBlocks = new Set(invalidBlocks)
     this.maxReorgDepth = maxReorgDepth
     this.headers = {}
     this.chain = {}
     this.unlinked = {}
-    this.processed = true
+    this.processed = false
     this.invalidatedBlock = false
 
     if (typeof genesisHeader === 'string') {
       const buf = Buffer.from(genesisHeader, 'hex')
-      this.genesis = this.addHeader({ genesis: true, buf })
+      this.addHeader({ genesis: true, buf })
     } else if (Buffer.isBuffer(genesisHeader)) {
-      this.genesis = this.addHeader({ genesis: true, buf: genesisHeader })
+      this.addHeader({ genesis: true, buf: genesisHeader })
     } else {
-      this.genesis = this.addHeader({ genesis: true, header: genesisHeader })
+      this.addHeader({ genesis: true, header: genesisHeader })
     }
   }
 
   addHeader({ buf, header = false, hash = false, genesis = false }) {
     if (hash) hash = hash.toString('hex')
-    if (this.headers[hash]) return hash
+    if (this.headers[hash]) return false
     if (!header) header = bsv.Header.fromBuffer(buf)
     if (!hash) hash = header.getHash().toString('hex')
-    if (this.headers[hash]) return hash
+    if (this.headers[hash]) return false
     if (this.invalidBlocks.has(hash)) {
       console.log(`Did not add invalid header: ${hash}`)
       return false
@@ -40,17 +41,20 @@ class Headers {
     const item = { hash }
     item.prev = header.prevHash.toString('hex')
     item.next = []
-    if (!genesis) {
+    this.headers[hash] = item
+    this.processed = false
+    if (genesis) {
+      this.genesis = hash
+    } else {
       const prev = this.headers[item.prev]
       if (prev) {
         prev.next.push(hash)
+        return true
       } else {
         this.unlinked[hash] = item
       }
     }
-    this.headers[hash] = item
-    this.processed = false
-    return hash
+    return false
   }
 
   process() {
