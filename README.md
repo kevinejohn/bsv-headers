@@ -20,8 +20,7 @@ npm i bsv-headers
 const BsvHeaders = require('bsv-headers')
 
 const headers = new BsvHeaders({
-  genesisHash:
-    '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
+  genesisHeader: '<Buffer or hex string of genesis header>',
   invalidBlocks: [],
   maxReorgDepth: 1000, // How far back to recalculate longest chain after adding new block headers. Set to 0 to always recalculate from genesis (slower)
 })
