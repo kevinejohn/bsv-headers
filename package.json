@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/kevinejohn/bsv-headers#readme",
   "author": "Kevin Johnson",
-  "license": "Open BSV License",
+  "license": "MIT",
   "dependencies": {
-    "bsv-minimal": "^0.4.4"
+    "bsv-minimal": "^0.5.1"
   }
 }

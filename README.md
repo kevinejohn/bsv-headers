@@ -22,7 +22,7 @@ const BsvHeaders = require('bsv-headers')
 const headers = new BsvHeaders({
   genesisHeader: '<Buffer or hex string of genesis header>',
   invalidBlocks: [],
-  maxReorgDepth: 1000, // How far back to recalculate longest chain after adding new block headers. Set to 0 to always recalculate from genesis (slower)
+  maxReorgDepth: 1000 // How far back to recalculate longest chain after adding new block headers. Set to 0 to always recalculate from genesis (slower)
 })
 
 // const buf = Buffer.from(/* <an 80 byte bitcoin block header> */)
@@ -39,20 +39,20 @@ const hash = headers.getHash(0)
 console.log(`Block 0 hash: ${hash}`)
 
 const height = headers.getHeight(
-  '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
+  '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
 )
 console.log(
-  `Block 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f height: ${height}`,
+  `Block 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f height: ${height}`
 )
 
 const header1 = headers.getHeader({
-  hash: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
+  hash: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
 })
 const header2 = headers.getHeader({ height: 0 })
 console.log(header1, header2)
 
 headers.invalidateBlock(
-  '00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048',
+  '00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048'
 )
 console.log(headers.getTip())
 ```
@@ -65,7 +65,3 @@ console.log(headers.getTip())
 
 - Validate block difficulty
 - Add unit tests
-
-## License
-
-The license for the code in this repository is the Open BSV License.

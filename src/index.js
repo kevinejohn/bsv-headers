@@ -4,7 +4,7 @@ const GENESIS_HEADER =
   '0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c'
 
 class Headers {
-  constructor(opts = {}) {
+  constructor (opts = {}) {
     const {
       genesisHeader = GENESIS_HEADER,
       invalidBlocks = [],
@@ -28,7 +28,7 @@ class Headers {
     }
   }
 
-  addHeader({ buf, header = false, hash = false, genesis = false }) {
+  addHeader ({ buf, header = false, hash = false, genesis = false }) {
     if (hash) hash = hash.toString('hex')
     if (this.headers[hash]) return false
     if (!header) header = bsv.Header.fromBuffer(buf)
@@ -57,7 +57,7 @@ class Headers {
     return false
   }
 
-  process() {
+  process () {
     if (this.processed) return
     for (const hash in this.unlinked) {
       const item = this.unlinked[hash]
@@ -109,7 +109,7 @@ class Headers {
     return index || this.headers[this.genesis]
   }
 
-  invalidateBlock(hash) {
+  invalidateBlock (hash) {
     hash = hash.toString('hex')
     const header = this.headers[hash]
     delete this.headers[hash]
@@ -133,7 +133,7 @@ class Headers {
     }
   }
 
-  getHeight(hash = false) {
+  getHeight (hash = false) {
     this.process()
     if (hash) {
       hash = hash.toString('hex')
@@ -144,14 +144,14 @@ class Headers {
     }
   }
 
-  getHash(height) {
+  getHash (height) {
     this.process()
     const hash = this.chain[`${height}`]
     if (!this.headers[hash]) throw Error(`No hash`)
     return hash
   }
 
-  getTip() {
+  getTip () {
     this.process()
     if (!this.tip) throw Error(`No tip`)
     return this.tip
