@@ -1,6 +1,6 @@
 {
   "name": "bsv-headers",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Determine longest bitcoin chain and query block order",
   "main": "src/index.js",
   "scripts": {
