@@ -30,13 +30,16 @@
   },
   "homepage": "https://github.com/kevinejohn/bsv-headers#readme",
   "author": "Kevin Johnson",
+  "contributors": [
+    "Andrew Johnson <andrewj@hey.com>"
+  ],
   "license": "MIT",
   "dependencies": {
-    "bsv-minimal": "^1.0.2"
+    "bsv-minimal": "^1.0.2",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@types/node": "^18.7.18",
-    "source-map-support": "^0.5.21",
+    "@types/node": "^18.7.19",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.15",
     "typedoc-plugin-markdown": "^3.13.6",

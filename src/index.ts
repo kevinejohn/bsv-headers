@@ -202,7 +202,7 @@ export default class Headers {
 
   getFromHeaderArray() {
     // https://en.bitcoin.it/wiki/Protocol_documentation#getblocks
-    const hashes = [];
+    const hashes: string[] = [];
     let step = 1;
     const tipHeight = this.getHeight();
     if (!tipHeight) throw Error("missing tipHeight");
