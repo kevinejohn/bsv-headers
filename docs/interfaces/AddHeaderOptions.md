@@ -19,9 +19,9 @@
 
 #### Defined in
 
-[index.ts:13](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L13)
+[index.ts:13](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L13)
 
-___
+---
 
 ### genesis
 
@@ -29,9 +29,9 @@ ___
 
 #### Defined in
 
-[index.ts:16](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L16)
+[index.ts:16](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L16)
 
-___
+---
 
 ### hash
 
@@ -39,9 +39,9 @@ ___
 
 #### Defined in
 
-[index.ts:15](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L15)
+[index.ts:15](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L15)
 
-___
+---
 
 ### header
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[index.ts:14](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L14)
+[index.ts:14](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L14)

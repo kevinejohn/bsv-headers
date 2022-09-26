@@ -15,12 +15,6 @@ export interface AddHeaderOptions {
   hash?: string | Buffer;
   genesis?: boolean;
 }
-export interface Header {
-  hash: string;
-  prev: string;
-  next: string[];
-  height?: number;
-}
 
 export default class Headers {
   invalidBlocks: Set<string>;
