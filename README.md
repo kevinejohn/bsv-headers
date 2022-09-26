@@ -21,7 +21,7 @@ npm i bsv-headers
 ## Use
 
 ```js
-const BsvHeaders = require("bsv-headers");
+const BsvHeaders = require("bsv-headers").default;
 
 const headers = new BsvHeaders({
   genesisHeader: "<Buffer or hex string of genesis header>",
