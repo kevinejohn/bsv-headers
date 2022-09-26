@@ -21,7 +21,7 @@
 
 [index.ts:13](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L13)
 
----
+___
 
 ### genesis
 
@@ -31,7 +31,7 @@
 
 [index.ts:16](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L16)
 
----
+___
 
 ### hash
 
@@ -41,7 +41,7 @@
 
 [index.ts:15](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L15)
 
----
+___
 
 ### header
 

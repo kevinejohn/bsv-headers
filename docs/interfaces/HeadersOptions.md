@@ -20,7 +20,7 @@
 
 [index.ts:7](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L7)
 
----
+___
 
 ### invalidBlocks
 
@@ -30,7 +30,7 @@
 
 [index.ts:8](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L8)
 
----
+___
 
 ### maxReorgDepth
 

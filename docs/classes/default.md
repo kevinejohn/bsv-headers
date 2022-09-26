@@ -39,8 +39,8 @@
 
 #### Parameters
 
-| Name   | Type                                                |
-| :----- | :-------------------------------------------------- |
+| Name | Type |
+| :------ | :------ |
 | `opts` | [`HeadersOptions`](../interfaces/HeadersOptions.md) |
 
 #### Defined in
@@ -57,7 +57,7 @@
 
 [index.ts:26](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L26)
 
----
+___
 
 ### genesis
 
@@ -67,7 +67,7 @@
 
 [index.ts:30](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L30)
 
----
+___
 
 ### genesisHeader
 
@@ -77,17 +77,17 @@
 
 [index.ts:31](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L31)
 
----
+___
 
 ### headers
 
-• **headers**: `Record`<`string`, { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string` }\>
+• **headers**: `Record`<`string`, { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }\>
 
 #### Defined in
 
 [index.ts:22](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L22)
 
----
+___
 
 ### invalidBlocks
 
@@ -97,7 +97,7 @@
 
 [index.ts:20](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L20)
 
----
+___
 
 ### invalidatedBlock
 
@@ -107,7 +107,7 @@
 
 [index.ts:29](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L29)
 
----
+___
 
 ### maxReorgDepth
 
@@ -117,7 +117,7 @@
 
 [index.ts:21](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L21)
 
----
+___
 
 ### processed
 
@@ -127,7 +127,7 @@
 
 [index.ts:28](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L28)
 
----
+___
 
 ### tip
 
@@ -135,20 +135,20 @@
 
 #### Type declaration
 
-| Name     | Type     |
-| :------- | :------- |
-| `hash`   | `string` |
+| Name | Type |
+| :------ | :------ |
+| `hash` | `string` |
 | `height` | `number` |
 
 #### Defined in
 
 [index.ts:32](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L32)
 
----
+___
 
 ### unlinked
 
-• **unlinked**: `Record`<`string`, { `hash`: `string` ; `next`: `string`[] ; `prev`: `string` }\>
+• **unlinked**: `Record`<`string`, { `hash`: `string` ; `next`: `string`[] ; `prev`: `string`  }\>
 
 #### Defined in
 
@@ -162,8 +162,8 @@
 
 #### Parameters
 
-| Name                | Type                                                    |
-| :------------------ | :------------------------------------------------------ |
+| Name | Type |
+| :------ | :------ |
 | `__namedParameters` | [`AddHeaderOptions`](../interfaces/AddHeaderOptions.md) |
 
 #### Returns
@@ -174,7 +174,7 @@
 
 [index.ts:61](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L61)
 
----
+___
 
 ### getFromHeaderArray
 
@@ -188,7 +188,7 @@
 
 [index.ts:204](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L204)
 
----
+___
 
 ### getHash
 
@@ -196,8 +196,8 @@
 
 #### Parameters
 
-| Name     | Type     |
-| :------- | :------- |
+| Name | Type |
+| :------ | :------ |
 | `height` | `number` |
 
 #### Returns
@@ -208,7 +208,7 @@
 
 [index.ts:192](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L192)
 
----
+___
 
 ### getHeight
 
@@ -216,8 +216,8 @@
 
 #### Parameters
 
-| Name    | Type                 |
-| :------ | :------------------- |
+| Name | Type |
+| :------ | :------ |
 | `hash?` | `string` \| `Buffer` |
 
 #### Returns
@@ -228,7 +228,7 @@
 
 [index.ts:179](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L179)
 
----
+___
 
 ### getTip
 
@@ -238,16 +238,16 @@
 
 `Object`
 
-| Name     | Type     |
-| :------- | :------- |
-| `hash`   | `string` |
+| Name | Type |
+| :------ | :------ |
+| `hash` | `string` |
 | `height` | `number` |
 
 #### Defined in
 
 [index.ts:199](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L199)
 
----
+___
 
 ### invalidateBlock
 
@@ -255,8 +255,8 @@
 
 #### Parameters
 
-| Name   | Type                 |
-| :----- | :------------------- |
+| Name | Type |
+| :------ | :------ |
 | `hash` | `string` \| `Buffer` |
 
 #### Returns
@@ -267,15 +267,15 @@
 
 [index.ts:153](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L153)
 
----
+___
 
 ### process
 
-▸ **process**(): `undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string` }
+▸ **process**(): `undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }
 
 #### Returns
 
-`undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string` }
+`undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }
 
 #### Defined in
 
