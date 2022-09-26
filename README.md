@@ -63,9 +63,8 @@ console.log(headers.getTip());
 
 ## Tests
 
-`TODO`
+`npm test`
 
 ## Future features
 
 - Validate block difficulty
-- Add unit tests

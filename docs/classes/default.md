@@ -12,6 +12,7 @@
 
 - [chain](default.md#chain)
 - [genesis](default.md#genesis)
+- [genesisHeader](default.md#genesisheader)
 - [headers](default.md#headers)
 - [invalidBlocks](default.md#invalidblocks)
 - [invalidatedBlock](default.md#invalidatedblock)
@@ -38,13 +39,13 @@
 
 #### Parameters
 
-| Name   | Type                                                |
-| :----- | :-------------------------------------------------- |
+| Name | Type |
+| :------ | :------ |
 | `opts` | [`HeadersOptions`](../interfaces/HeadersOptions.md) |
 
 #### Defined in
 
-[index.ts:36](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L36)
+[index.ts:40](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L40)
 
 ## Properties
 
@@ -54,29 +55,39 @@
 
 #### Defined in
 
-[index.ts:29](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L29)
+[index.ts:32](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L32)
 
----
+___
 
 ### genesis
 
-• `Optional` **genesis**: `string`
+• **genesis**: `string`
 
 #### Defined in
 
-[index.ts:33](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L33)
+[index.ts:36](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L36)
 
----
+___
+
+### genesisHeader
+
+• **genesisHeader**: `default`
+
+#### Defined in
+
+[index.ts:37](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L37)
+
+___
 
 ### headers
 
-• **headers**: `Record`<`string`, [`Header`](../interfaces/Header.md)\>
+• **headers**: `Record`<`string`, { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }\>
 
 #### Defined in
 
-[index.ts:28](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L28)
+[index.ts:28](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L28)
 
----
+___
 
 ### invalidBlocks
 
@@ -84,9 +95,9 @@
 
 #### Defined in
 
-[index.ts:26](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L26)
+[index.ts:26](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L26)
 
----
+___
 
 ### invalidatedBlock
 
@@ -94,9 +105,9 @@
 
 #### Defined in
 
-[index.ts:32](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L32)
+[index.ts:35](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L35)
 
----
+___
 
 ### maxReorgDepth
 
@@ -104,9 +115,9 @@
 
 #### Defined in
 
-[index.ts:27](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L27)
+[index.ts:27](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L27)
 
----
+___
 
 ### processed
 
@@ -114,39 +125,46 @@
 
 #### Defined in
 
-[index.ts:31](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L31)
+[index.ts:34](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L34)
 
----
+___
 
 ### tip
 
-• `Optional` **tip**: [`Header`](../interfaces/Header.md)
+• **tip**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `hash` | `string` |
+| `height` | `number` |
 
 #### Defined in
 
-[index.ts:34](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L34)
+[index.ts:38](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L38)
 
----
+___
 
 ### unlinked
 
-• **unlinked**: `Record`<`string`, [`Header`](../interfaces/Header.md)\>
+• **unlinked**: `Record`<`string`, { `hash`: `string` ; `next`: `string`[] ; `prev`: `string`  }\>
 
 #### Defined in
 
-[index.ts:30](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L30)
+[index.ts:33](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L33)
 
 ## Methods
 
 ### addHeader
 
-▸ **addHeader**(`opts`): `boolean`
+▸ **addHeader**(`__namedParameters`): `boolean`
 
 #### Parameters
 
-| Name   | Type                                                    |
-| :----- | :------------------------------------------------------ |
-| `opts` | [`AddHeaderOptions`](../interfaces/AddHeaderOptions.md) |
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | [`AddHeaderOptions`](../interfaces/AddHeaderOptions.md) |
 
 #### Returns
 
@@ -154,9 +172,9 @@
 
 #### Defined in
 
-[index.ts:60](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L60)
+[index.ts:67](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L67)
 
----
+___
 
 ### getFromHeaderArray
 
@@ -168,9 +186,9 @@
 
 #### Defined in
 
-[index.ts:203](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L203)
+[index.ts:210](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L210)
 
----
+___
 
 ### getHash
 
@@ -178,8 +196,8 @@
 
 #### Parameters
 
-| Name     | Type     |
-| :------- | :------- |
+| Name | Type |
+| :------ | :------ |
 | `height` | `number` |
 
 #### Returns
@@ -188,43 +206,48 @@
 
 #### Defined in
 
-[index.ts:190](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L190)
+[index.ts:198](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L198)
 
----
+___
 
 ### getHeight
 
-▸ **getHeight**(`hash?`): `undefined` \| `number`
+▸ **getHeight**(`hash?`): `number`
 
 #### Parameters
 
-| Name    | Type                 |
-| :------ | :------------------- |
+| Name | Type |
+| :------ | :------ |
 | `hash?` | `string` \| `Buffer` |
 
 #### Returns
 
-`undefined` \| `number`
+`number`
 
 #### Defined in
 
-[index.ts:179](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L179)
+[index.ts:185](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L185)
 
----
+___
 
 ### getTip
 
-▸ **getTip**(): [`Header`](../interfaces/Header.md)
+▸ **getTip**(): `Object`
 
 #### Returns
 
-[`Header`](../interfaces/Header.md)
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `hash` | `string` |
+| `height` | `number` |
 
 #### Defined in
 
-[index.ts:197](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L197)
+[index.ts:205](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L205)
 
----
+___
 
 ### invalidateBlock
 
@@ -232,8 +255,8 @@
 
 #### Parameters
 
-| Name   | Type                 |
-| :----- | :------------------- |
+| Name | Type |
+| :------ | :------ |
 | `hash` | `string` \| `Buffer` |
 
 #### Returns
@@ -242,18 +265,18 @@
 
 #### Defined in
 
-[index.ts:153](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L153)
+[index.ts:159](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L159)
 
----
+___
 
 ### process
 
-▸ **process**(): `undefined` \| [`Header`](../interfaces/Header.md)
+▸ **process**(): `undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }
 
 #### Returns
 
-`undefined` \| [`Header`](../interfaces/Header.md)
+`undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }
 
 #### Defined in
 
-[index.ts:97](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L97)
+[index.ts:99](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L99)

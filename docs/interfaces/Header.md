@@ -19,9 +19,9 @@
 
 #### Defined in
 
-[index.ts:19](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L19)
+[index.ts:19](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L19)
 
----
+___
 
 ### height
 
@@ -29,9 +29,9 @@
 
 #### Defined in
 
-[index.ts:22](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L22)
+[index.ts:22](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L22)
 
----
+___
 
 ### next
 
@@ -39,9 +39,9 @@
 
 #### Defined in
 
-[index.ts:21](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L21)
+[index.ts:21](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L21)
 
----
+___
 
 ### prev
 
@@ -49,4 +49,4 @@
 
 #### Defined in
 
-[index.ts:20](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L20)
+[index.ts:20](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L20)

@@ -2,7 +2,7 @@
   "name": "bsv-headers",
   "version": "0.1.1",
   "description": "Determine longest bitcoin chain and query block order",
-  "main": "./lib/index.js",
+  "main": "./lib/index.ts",
   "types": "./lib/index.d.ts",
   "files": [
     "lib",
@@ -11,7 +11,8 @@
   "scripts": {
     "build": "tsc",
     "docs": "typedoc",
-    "prepare": "npm run build && npm run docs"
+    "prepare": "npm run build && npm run docs",
+    "test": "ts-node ./tests/index.ts"
   },
   "keywords": [
     "Bitcoin",
@@ -35,11 +36,11 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "bsv-minimal": "^1.0.2",
+    "bsv-minimal": "^1.0.4",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "@types/node": "^18.7.19",
+    "@types/node": "^18.7.22",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.15",
     "typedoc-plugin-markdown": "^3.13.6",

@@ -14,13 +14,13 @@
 
 ### genesisHeader
 
-• `Optional` **genesisHeader**: `string` \| `Buffer`
+• `Optional` **genesisHeader**: `string` \| `Buffer` \| `default`
 
 #### Defined in
 
-[index.ts:7](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L7)
+[index.ts:7](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L7)
 
----
+___
 
 ### invalidBlocks
 
@@ -28,9 +28,9 @@
 
 #### Defined in
 
-[index.ts:8](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L8)
+[index.ts:8](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L8)
 
----
+___
 
 ### maxReorgDepth
 
@@ -38,4 +38,4 @@
 
 #### Defined in
 
-[index.ts:9](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L9)
+[index.ts:9](https://github.com/andrewrjohn/bsv-headers/blob/master/src/index.ts#L9)

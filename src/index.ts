@@ -1,17 +1,17 @@
-import bsv from "bsv-minimal";
+import * as bsv from "bsv-minimal";
 
-const GENESIS_HEADER =
+export const GENESIS_HEADER =
   "0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c";
 
 export interface HeadersOptions {
-  genesisHeader?: string | Buffer;
+  genesisHeader?: string | Buffer | bsv.Header;
   invalidBlocks?: string[];
   maxReorgDepth?: number;
 }
 
 export interface AddHeaderOptions {
   buf?: Buffer;
-  header?: boolean;
+  header?: bsv.Header;
   hash?: string | Buffer;
   genesis?: boolean;
 }
@@ -25,13 +25,17 @@ export interface Header {
 export default class Headers {
   invalidBlocks: Set<string>;
   maxReorgDepth: number;
-  headers: Record<string, Header>;
+  headers: Record<
+    string,
+    { hash: string; prev: string; next: string[]; height?: number }
+  >;
   chain: Record<string, string>;
-  unlinked: Record<string, Header>;
+  unlinked: Record<string, { hash: string; prev: string; next: string[] }>;
   processed: boolean;
   invalidatedBlock: boolean;
-  genesis?: string;
-  tip?: Header;
+  genesis: string;
+  genesisHeader: bsv.Header;
+  tip: { height: number; hash: string };
 
   constructor(opts: HeadersOptions = {}) {
     const {
@@ -49,23 +53,23 @@ export default class Headers {
 
     if (typeof genesisHeader === "string") {
       const buf = Buffer.from(genesisHeader, "hex");
-      this.addHeader({ genesis: true, buf });
+      this.genesisHeader = bsv.Header.fromBuffer(buf);
     } else if (Buffer.isBuffer(genesisHeader)) {
-      this.addHeader({ genesis: true, buf: genesisHeader });
+      this.genesisHeader = bsv.Header.fromBuffer(genesisHeader);
     } else {
-      this.addHeader({ genesis: true, header: genesisHeader });
+      this.genesisHeader = genesisHeader;
     }
+    this.addHeader({ genesis: true, header: this.genesisHeader });
+    this.genesis = this.genesisHeader.getHash(true);
+    this.tip = this.getTip();
   }
 
-  addHeader(opts: AddHeaderOptions) {
-    let hash, header;
-    if (opts.hash) hash = opts.hash.toString("hex");
+  addHeader({ header, buf, hash, genesis }: AddHeaderOptions) {
+    if (hash) hash = hash.toString("hex");
     if (hash && this.headers[hash]) return false;
-    if (!opts.header) {
-      if (!opts.buf) throw Error("Missing buf");
-      header = bsv.Header.fromBuffer(opts.buf);
-    }
-    if (!hash && header) hash = header.getHash().toString("hex");
+    if (!header && !buf) throw Error(`Missing header`);
+    if (!header && buf) header = bsv.Header.fromBuffer(buf);
+    if (!hash && header) hash = header.getHash(true);
     if (hash && this.headers[hash]) return false;
     if (hash && this.invalidBlocks.has(hash)) {
       console.log(`Did not add invalid header: ${hash}`);
@@ -80,9 +84,7 @@ export default class Headers {
     };
     this.headers[hash] = item;
     this.processed = false;
-    if (opts.genesis) {
-      this.genesis = hash;
-    } else {
+    if (!genesis) {
       const prev = this.headers[item.prev];
       if (prev) {
         prev.next.push(hash);
@@ -115,6 +117,7 @@ export default class Headers {
       throw Error(`Missing starting block ${startingHash}`);
     }
     let hashes = [startingHash];
+    let index;
     while (hashes.length > 0) {
       const nextHashes = [];
       for (const hash of hashes) {
@@ -131,15 +134,18 @@ export default class Headers {
             added++;
           }
         }
-        if (added === 0) this.tip = item;
+        if (added === 0) {
+          index = item;
+          this.tip = { height: item.height, hash: item.hash };
+        }
       }
       hashes = nextHashes;
       height++;
     }
-    let index = this.tip;
     while (index) {
       if (this.chain[`${index.height}`] === index.hash) break;
       this.chain[`${index.height}`] = index.hash;
+      if (!this.headers[index.prev]) break;
       index = this.headers[index.prev];
     }
     this.processed = true;
@@ -159,7 +165,7 @@ export default class Headers {
       console.log(`Invalidating block ${header.height}, ${hash}`);
       const heightHash = this.chain[`${header.height}`];
       if (hash === heightHash) {
-        if (!header.height || !this.tip?.height)
+        if (!header.height || !this.tip.height)
           throw Error("Missing header or tip height");
         for (let height = header.height; height <= this.tip.height; height++) {
           const hash = this.chain[`${height}`];
@@ -176,31 +182,32 @@ export default class Headers {
     }
   }
 
-  getHeight(hash?: string | Buffer) {
+  getHeight(hash?: string | Buffer): number {
     this.process();
     if (hash) {
       hash = hash.toString("hex");
       if (!this.headers[hash]) throw Error(`No height`);
-      return this.headers[hash].height;
+      const height = this.headers[hash].height;
+      if (height === undefined) throw Error(`No height`);
+      return height;
     } else {
       return this.getTip().height;
     }
   }
 
-  getHash(height: number) {
+  getHash(height: number): string {
     this.process();
     const hash = this.chain[`${height}`];
     if (!this.headers[hash]) throw Error(`No hash`);
     return hash;
   }
 
-  getTip() {
+  getTip(): { height: number; hash: string } {
     this.process();
-    if (!this.tip) throw Error(`No tip`);
     return this.tip;
   }
 
-  getFromHeaderArray() {
+  getFromHeaderArray(): string[] {
     // https://en.bitcoin.it/wiki/Protocol_documentation#getblocks
     const hashes: string[] = [];
     let step = 1;
