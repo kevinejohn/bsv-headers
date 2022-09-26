@@ -21,6 +21,7 @@ const headerReorg = [
 ];
 
 const headers = new Headers();
+console.log(headers.getFromHeaderArray());
 assert.equal(headers.getTip().height, 0);
 
 for (let i = 0; i < headerHexs.length; i++) {

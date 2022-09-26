@@ -206,7 +206,6 @@ export default class Headers {
     const hashes: string[] = [];
     let step = 1;
     const tipHeight = this.getHeight();
-    if (!tipHeight) throw Error("missing tipHeight");
     for (let i = tipHeight; i > 0; i -= step) {
       if (hashes.length >= 10) step *= 2;
       hashes.push(this.getHash(i));
