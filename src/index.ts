@@ -132,6 +132,9 @@ type ResolvedNetworkOptions = {
 const TWO = BigInt(2);
 const MAX_UINT256 = TWO ** BigInt(256) - BigInt(1);
 const WORK_BASE = TWO ** BigInt(256);
+const DEFAULT_DIFFICULTY_EXCEPTION_HASHES = new Set([
+  "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec",
+]);
 
 const MAINNET_NETWORK: ResolvedNetworkOptions = {
   name: "mainnet",
@@ -837,6 +840,10 @@ export default class Headers {
   }
 
   private getExpectedBits(entry: HeaderEntry, prev: HeaderEntry): Buffer {
+    if (DEFAULT_DIFFICULTY_EXCEPTION_HASHES.has(entry.hash)) {
+      return Buffer.from(entry.bits);
+    }
+
     if (this.expectedBits) {
       const expected = this.expectedBits({
         hash: entry.hash,

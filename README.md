@@ -78,6 +78,7 @@ By default, `bsv-headers` uses legacy mainnet-style difficulty retargeting:
 - compact targets may not exceed `maxTarget`
 - non-retarget blocks must keep the previous block's `bits`
 - retarget blocks are checked with the configured interval and target timespan
+- the BCH/BSV fork block `000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec` skips only the expected-`bits` comparison
 
 For chains or eras with different rules, pass a custom network config or a `getExpectedBits` callback. The callback receives the candidate header, height, previous header metadata, and the `Headers` instance, and should return the expected compact bits as a 4-byte buffer or hex string.
 

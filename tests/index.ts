@@ -51,15 +51,17 @@ function syntheticHash(index: number): string {
 function syntheticHeader(
   hash: string,
   prevHash: string,
-  index: number
+  index: number,
+  bitsHex = "1d00ffff"
 ): bsv.Header {
   const buf = Buffer.from(headerHexs[0], "hex");
   Buffer.from(prevHash, "hex").reverse().copy(buf, 4);
   buf.writeUInt32LE(1231006505 + index, 68);
+  Buffer.from(bitsHex, "hex").reverse().copy(buf, 72);
   buf.writeUInt32LE(index, 76);
   return {
     prevHash: Buffer.from(prevHash, "hex"),
-    bits: Buffer.from("1d00ffff", "hex"),
+    bits: Buffer.from(bitsHex, "hex"),
     time: 1231006505 + index,
     toBuffer: () => Buffer.from(buf),
     getHash: (hexStr?: boolean) =>
@@ -175,6 +177,28 @@ test("validates expected difficulty unless a network rule hook overrides it", ()
     accepted.addHeader({ buf: Buffer.from(highWorkHeaderHex, "hex") }),
     true
   );
+});
+
+test("ignores difficulty mismatch for the BCH/BSV fork block", () => {
+  const forkHash =
+    "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec";
+  const genesisHash = getHeaderHash(headerHexs[0]);
+  const rejected = new Headers({ validateProofOfWork: false });
+  assert.equal(
+    rejected.addHeader({
+      header: syntheticHeader(syntheticHash(100), genesisHash, 100, "1c00ffff"),
+    }),
+    false
+  );
+
+  const accepted = new Headers({ validateProofOfWork: false });
+  assert.equal(
+    accepted.addHeader({
+      header: syntheticHeader(forkHash, genesisHash, 100, "1c00ffff"),
+    }),
+    true
+  );
+  assert.equal(accepted.getHash(1), forkHash);
 });
 
 test("selects accumulated work over height", () => {

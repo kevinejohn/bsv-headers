@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.2
+
+### Fixed
+
+- Ignored the difficulty `bits` comparison for the BCH/BSV fork block `000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec` while still validating its header hash, target bounds, and proof-of-work.
+
 ## 3.0.1
 
 ### Fixed
