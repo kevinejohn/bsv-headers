@@ -6,7 +6,7 @@
 
 # Interface: SerializedHeaders
 
-Defined in: [index.ts:86](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L86)
+Defined in: [index.ts:110](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L110)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:86](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **chain**: `Record`\<`string`, `string`\>
 
-Defined in: [index.ts:102](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L102)
+Defined in: [index.ts:130](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L130)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:102](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **genesis**: `string`
 
-Defined in: [index.ts:99](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L99)
+Defined in: [index.ts:127](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L127)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:99](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **headers**: [`SerializedHeaderEntry`](SerializedHeaderEntry.md)[]
 
-Defined in: [index.ts:101](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L101)
+Defined in: [index.ts:129](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L129)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [index.ts:101](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **invalidatedBlock**: `boolean`
 
-Defined in: [index.ts:106](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L106)
+Defined in: [index.ts:134](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L134)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:106](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **invalidBlocks**: `string`[]
 
-Defined in: [index.ts:100](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L100)
+Defined in: [index.ts:128](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L128)
 
 ***
 
@@ -54,7 +54,23 @@ Defined in: [index.ts:100](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **options**: `object`
 
-Defined in: [index.ts:88](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L88)
+Defined in: [index.ts:112](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L112)
+
+#### cashDaaActivationHeight?
+
+> `optional` **cashDaaActivationHeight?**: `number`
+
+#### cashForkHeight?
+
+> `optional` **cashForkHeight?**: `number`
+
+#### difficultyAlgorithm
+
+> **difficultyAlgorithm**: [`DifficultyAlgorithm`](../type-aliases/DifficultyAlgorithm.md)
+
+#### difficultyExceptionHashes
+
+> **difficultyExceptionHashes**: `string`[]
 
 #### genesisHeader
 
@@ -98,7 +114,7 @@ Defined in: [index.ts:88](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **processed**: `boolean`
 
-Defined in: [index.ts:105](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L105)
+Defined in: [index.ts:133](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L133)
 
 ***
 
@@ -106,7 +122,7 @@ Defined in: [index.ts:105](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **tip**: `object`
 
-Defined in: [index.ts:104](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L104)
+Defined in: [index.ts:132](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L132)
 
 #### hash
 
@@ -122,7 +138,7 @@ Defined in: [index.ts:104](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **unlinked**: `string`[]
 
-Defined in: [index.ts:103](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L103)
+Defined in: [index.ts:131](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L131)
 
 ***
 
@@ -130,4 +146,4 @@ Defined in: [index.ts:103](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **version**: `1`
 
-Defined in: [index.ts:87](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L87)
+Defined in: [index.ts:111](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L111)

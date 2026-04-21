@@ -6,7 +6,7 @@
 
 # Interface: ExpectedBitsContext
 
-Defined in: [index.ts:24](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L24)
+Defined in: [index.ts:40](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L40)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:24](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **hash**: `string`
 
-Defined in: [index.ts:25](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L25)
+Defined in: [index.ts:41](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L41)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:25](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **header**: `Header`
 
-Defined in: [index.ts:26](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L26)
+Defined in: [index.ts:42](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L42)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:26](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **headers**: [`default`](../classes/default.md)
 
-Defined in: [index.ts:29](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L29)
+Defined in: [index.ts:45](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L45)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [index.ts:29](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **height**: `number`
 
-Defined in: [index.ts:27](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L27)
+Defined in: [index.ts:43](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L43)
 
 ***
 
@@ -46,4 +46,4 @@ Defined in: [index.ts:27](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **previous**: [`HeaderMeta`](HeaderMeta.md)
 
-Defined in: [index.ts:28](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L28)
+Defined in: [index.ts:44](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L44)

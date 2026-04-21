@@ -6,7 +6,7 @@
 
 # Interface: HeadersLogger
 
-Defined in: [index.ts:8](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L8)
+Defined in: [index.ts:24](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L24)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:8](https://github.com/kevinejohn/bsv-headers/blob/master/s
 
 > `optional` **debug?**: (`message`) => `void`
 
-Defined in: [index.ts:9](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L9)
+Defined in: [index.ts:25](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L25)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [index.ts:9](https://github.com/kevinejohn/bsv-headers/blob/master/s
 
 > `optional` **warn?**: (`message`) => `void`
 
-Defined in: [index.ts:10](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L10)
+Defined in: [index.ts:26](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L26)
 
 #### Parameters
 

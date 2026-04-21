@@ -3,7 +3,23 @@ import * as bsv from "bsv-minimal";
 export const GENESIS_HEADER =
   "0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c";
 
-export type NetworkName = "mainnet";
+export type ChainTicker = "BTC" | "BCH" | "BSV";
+export type NetworkName = "mainnet" | ChainTicker;
+export type DifficultyAlgorithm = "legacy" | "cash";
+
+export const FORK_BLOCK_HASHES: Record<ChainTicker, string[]> = {
+  BTC: [
+    "00000000000000000019f112ec0a9982926f1258cdcc558dd7c3b7e5dc7fa148",
+  ],
+  BCH: [
+    "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec",
+    "0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c",
+  ],
+  BSV: [
+    "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec",
+    "000000000000000001d956714215d96ffc00e0afda4cd0a96c96f8d802b1662b",
+  ],
+};
 
 export interface HeadersLogger {
   debug?: (message: string) => void;
@@ -36,6 +52,10 @@ export type ExpectedBitsFn = (
 export interface NetworkOptions {
   name?: string;
   genesisHeader?: string | Buffer | bsv.Header;
+  difficultyExceptionHashes?: (string | Buffer)[];
+  difficultyAlgorithm?: DifficultyAlgorithm;
+  cashForkHeight?: number;
+  cashDaaActivationHeight?: number;
   maxTarget?: string | Buffer | bigint;
   targetSpacing?: number;
   retargetInterval?: number;
@@ -50,6 +70,10 @@ export interface HeadersOptions {
   maxReorgDepth?: number;
   maxTarget?: string | Buffer | bigint;
   network?: NetworkName | NetworkOptions;
+  difficultyExceptionHashes?: (string | Buffer)[];
+  difficultyAlgorithm?: DifficultyAlgorithm;
+  cashForkHeight?: number;
+  cashDaaActivationHeight?: number;
   targetSpacing?: number;
   retargetInterval?: number;
   targetTimespan?: number;
@@ -94,6 +118,10 @@ export interface SerializedHeaders {
     targetTimespan: number;
     validateDifficulty: boolean;
     validateProofOfWork: boolean;
+    difficultyExceptionHashes: string[];
+    difficultyAlgorithm: DifficultyAlgorithm;
+    cashForkHeight?: number;
+    cashDaaActivationHeight?: number;
     network?: string;
   };
   genesis: string;
@@ -121,6 +149,10 @@ type HeaderEntry = {
 type ResolvedNetworkOptions = {
   name?: string;
   genesisHeader: string | Buffer | bsv.Header;
+  difficultyExceptionHashes: (string | Buffer)[];
+  difficultyAlgorithm: DifficultyAlgorithm;
+  cashForkHeight?: number;
+  cashDaaActivationHeight?: number;
   maxTarget?: string | Buffer | bigint;
   targetSpacing: number;
   retargetInterval: number;
@@ -132,28 +164,67 @@ type ResolvedNetworkOptions = {
 const TWO = BigInt(2);
 const MAX_UINT256 = TWO ** BigInt(256) - BigInt(1);
 const WORK_BASE = TWO ** BigInt(256);
-const DEFAULT_DIFFICULTY_EXCEPTION_HASHES = new Set([
-  "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec",
-]);
+const CASH_FORK_HEIGHT = 478559;
+const CASH_DAA_ACTIVATION_HEIGHT = 504032;
+const ALL_FORK_BLOCK_HASHES = Array.from(
+  new Set(Object.values(FORK_BLOCK_HASHES).flat())
+);
 
 const MAINNET_NETWORK: ResolvedNetworkOptions = {
   name: "mainnet",
   genesisHeader: GENESIS_HEADER,
+  difficultyExceptionHashes: ALL_FORK_BLOCK_HASHES,
+  difficultyAlgorithm: "legacy",
   targetSpacing: 10 * 60,
   retargetInterval: 2016,
   targetTimespan: 14 * 24 * 60 * 60,
   validateDifficulty: true,
 };
 
+const NETWORKS: Record<NetworkName, ResolvedNetworkOptions> = {
+  mainnet: MAINNET_NETWORK,
+  BTC: {
+    ...MAINNET_NETWORK,
+    name: "BTC",
+    difficultyExceptionHashes: FORK_BLOCK_HASHES.BTC,
+  },
+  BCH: {
+    ...MAINNET_NETWORK,
+    name: "BCH",
+    difficultyExceptionHashes: FORK_BLOCK_HASHES.BCH,
+    difficultyAlgorithm: "cash",
+    cashForkHeight: CASH_FORK_HEIGHT,
+    cashDaaActivationHeight: CASH_DAA_ACTIVATION_HEIGHT,
+  },
+  BSV: {
+    ...MAINNET_NETWORK,
+    name: "BSV",
+    difficultyExceptionHashes: FORK_BLOCK_HASHES.BSV,
+    difficultyAlgorithm: "cash",
+    cashForkHeight: CASH_FORK_HEIGHT,
+    cashDaaActivationHeight: CASH_DAA_ACTIVATION_HEIGHT,
+  },
+};
+
 function resolveNetwork(
   network: NetworkName | NetworkOptions | undefined
 ): ResolvedNetworkOptions {
-  if (!network || network === "mainnet") return MAINNET_NETWORK;
-  if (typeof network === "string") throw Error(`Unknown network ${network}`);
+  if (!network) return MAINNET_NETWORK;
+  if (typeof network === "string") {
+    const resolved = NETWORKS[network];
+    if (!resolved) throw Error(`Unknown network ${network}`);
+    return resolved;
+  }
+  const base =
+    network.name && network.name in NETWORKS
+      ? NETWORKS[network.name as NetworkName]
+      : MAINNET_NETWORK;
   return {
-    ...MAINNET_NETWORK,
+    ...base,
     ...network,
-    genesisHeader: network.genesisHeader || MAINNET_NETWORK.genesisHeader,
+    difficultyExceptionHashes:
+      network.difficultyExceptionHashes || base.difficultyExceptionHashes,
+    genesisHeader: network.genesisHeader || base.genesisHeader,
   };
 }
 
@@ -316,6 +387,32 @@ function getAncestorAtHeight(
   return header && header.height === height ? header : undefined;
 }
 
+function getMedianTimePast(
+  headers: Record<string, HeaderEntry>,
+  hash: string
+): number | undefined {
+  const times: number[] = [];
+  let header = headers[hash];
+  for (let i = 0; i < 11 && header; i++) {
+    times.push(header.time);
+    header = headers[header.prev];
+  }
+  if (times.length === 0) return undefined;
+  times.sort((a, b) => a - b);
+  return times[Math.floor(times.length / 2)];
+}
+
+function getSuitableBlock(
+  headers: Record<string, HeaderEntry>,
+  hash: string
+): HeaderEntry | undefined {
+  const block2 = headers[hash];
+  const block1 = block2 ? headers[block2.prev] : undefined;
+  const block0 = block1 ? headers[block1.prev] : undefined;
+  if (!block0 || !block1 || !block2) return undefined;
+  return [block0, block1, block2].sort((a, b) => a.time - b.time)[1];
+}
+
 function cloneMeta(header: HeaderEntry): HeaderMeta {
   return {
     hash: header.hash,
@@ -343,6 +440,10 @@ export default class Headers {
   private targetTimespan: number;
   private validateDifficulty: boolean;
   private validateProofOfWork: boolean;
+  private difficultyExceptionHashes: Set<string>;
+  private difficultyAlgorithm: DifficultyAlgorithm;
+  private cashForkHeight?: number;
+  private cashDaaActivationHeight?: number;
   private expectedBits?: ExpectedBitsFn;
   private logger?: HeadersLogger;
   private networkName?: string;
@@ -357,6 +458,10 @@ export default class Headers {
       invalidBlocks = [],
       maxReorgDepth = 1000,
       maxTarget = network.maxTarget,
+      difficultyExceptionHashes = network.difficultyExceptionHashes,
+      difficultyAlgorithm = network.difficultyAlgorithm,
+      cashForkHeight = network.cashForkHeight,
+      cashDaaActivationHeight = network.cashDaaActivationHeight,
       targetSpacing = network.targetSpacing,
       retargetInterval = network.retargetInterval,
       targetTimespan = network.targetTimespan,
@@ -380,6 +485,12 @@ export default class Headers {
     this.targetTimespan = targetTimespan || targetSpacing * retargetInterval;
     this.validateDifficulty = validateDifficulty;
     this.validateProofOfWork = validateProofOfWork;
+    this.difficultyExceptionHashes = new Set(
+      difficultyExceptionHashes.map((hash) => normalizeHash(hash))
+    );
+    this.difficultyAlgorithm = difficultyAlgorithm;
+    this.cashForkHeight = cashForkHeight;
+    this.cashDaaActivationHeight = cashDaaActivationHeight;
     this.expectedBits = getExpectedBits;
     this.logger = logger || undefined;
     this.networkName = network.name;
@@ -411,6 +522,14 @@ export default class Headers {
       network:
         opts.network ||
         (data.options.network === "mainnet" ? data.options.network : undefined),
+      difficultyExceptionHashes:
+        opts.difficultyExceptionHashes ??
+        data.options.difficultyExceptionHashes,
+      difficultyAlgorithm:
+        opts.difficultyAlgorithm ?? data.options.difficultyAlgorithm,
+      cashForkHeight: opts.cashForkHeight ?? data.options.cashForkHeight,
+      cashDaaActivationHeight:
+        opts.cashDaaActivationHeight ?? data.options.cashDaaActivationHeight,
       targetSpacing: opts.targetSpacing ?? data.options.targetSpacing,
       retargetInterval: opts.retargetInterval ?? data.options.retargetInterval,
       targetTimespan: opts.targetTimespan ?? data.options.targetTimespan,
@@ -763,6 +882,10 @@ export default class Headers {
         targetTimespan: this.targetTimespan,
         validateDifficulty: this.validateDifficulty,
         validateProofOfWork: this.validateProofOfWork,
+        difficultyExceptionHashes: [...this.difficultyExceptionHashes],
+        difficultyAlgorithm: this.difficultyAlgorithm,
+        cashForkHeight: this.cashForkHeight,
+        cashDaaActivationHeight: this.cashDaaActivationHeight,
         network: this.networkName === "mainnet" ? this.networkName : undefined,
       },
       genesis: this.genesis,
@@ -840,7 +963,7 @@ export default class Headers {
   }
 
   private getExpectedBits(entry: HeaderEntry, prev: HeaderEntry): Buffer {
-    if (DEFAULT_DIFFICULTY_EXCEPTION_HASHES.has(entry.hash)) {
+    if (this.difficultyExceptionHashes.has(entry.hash)) {
       return Buffer.from(entry.bits);
     }
 
@@ -855,6 +978,23 @@ export default class Headers {
       if (expected) return normalizeBits(expected);
     }
 
+    if (
+      this.difficultyAlgorithm === "cash" &&
+      entry.height !== undefined &&
+      entry.height >= (this.cashForkHeight || CASH_FORK_HEIGHT)
+    ) {
+      const cashDaaActivationHeight =
+        this.cashDaaActivationHeight || CASH_DAA_ACTIVATION_HEIGHT;
+      if (entry.height >= cashDaaActivationHeight) {
+        return this.getCashDaaExpectedBits(prev);
+      }
+      return this.getEdaExpectedBits(entry, prev);
+    }
+
+    return this.getLegacyExpectedBits(entry, prev);
+  }
+
+  private getLegacyExpectedBits(entry: HeaderEntry, prev: HeaderEntry): Buffer {
     if (!entry.height || entry.height % this.retargetInterval !== 0) {
       return Buffer.from(prev.bits);
     }
@@ -875,6 +1015,72 @@ export default class Headers {
     const previousTarget = compactToTarget(prev.bits);
     let nextTarget =
       (previousTarget * BigInt(actualTimespan)) / BigInt(this.targetTimespan);
+    if (nextTarget > this.maxTarget) nextTarget = this.maxTarget;
+    return targetToCompact(nextTarget);
+  }
+
+  private getEdaExpectedBits(entry: HeaderEntry, prev: HeaderEntry): Buffer {
+    if (entry.height && entry.height % this.retargetInterval === 0) {
+      return this.getLegacyExpectedBits(entry, prev);
+    }
+
+    const powLimitBits = targetToCompact(this.maxTarget);
+    if (prev.bits.equals(powLimitBits)) {
+      return powLimitBits;
+    }
+
+    if (entry.height === undefined) return Buffer.from(prev.bits);
+    const ancestor = getAncestorAtHeight(
+      this.headerEntries,
+      prev.hash,
+      entry.height - 7
+    );
+    if (!ancestor) return Buffer.from(prev.bits);
+
+    const prevMtp = getMedianTimePast(this.headerEntries, prev.hash);
+    const ancestorMtp = getMedianTimePast(this.headerEntries, ancestor.hash);
+    if (
+      prevMtp === undefined ||
+      ancestorMtp === undefined ||
+      prevMtp - ancestorMtp < 12 * 60 * 60
+    ) {
+      return Buffer.from(prev.bits);
+    }
+
+    let nextTarget = compactToTarget(prev.bits);
+    nextTarget += nextTarget >> BigInt(2);
+    if (nextTarget > this.maxTarget) nextTarget = this.maxTarget;
+    return targetToCompact(nextTarget);
+  }
+
+  private getCashDaaExpectedBits(prev: HeaderEntry): Buffer {
+    const last = getSuitableBlock(this.headerEntries, prev.hash);
+    if (!last || prev.height === undefined) return Buffer.from(prev.bits);
+
+    const firstAncestor = getAncestorAtHeight(
+      this.headerEntries,
+      prev.hash,
+      prev.height - 144
+    );
+    if (!firstAncestor) return Buffer.from(prev.bits);
+
+    const first = getSuitableBlock(this.headerEntries, firstAncestor.hash);
+    if (!first) return Buffer.from(prev.bits);
+
+    let actualTimespan = last.time - first.time;
+    const minTimespan = 72 * this.targetSpacing;
+    const maxTimespan = 288 * this.targetSpacing;
+    actualTimespan = Math.max(minTimespan, Math.min(maxTimespan, actualTimespan));
+
+    const work = getAncestorChainWork(this.headerEntries, last.hash) -
+      getAncestorChainWork(this.headerEntries, first.hash);
+    if (work <= BigInt(0)) return Buffer.from(prev.bits);
+
+    const projectedWork =
+      (work * BigInt(this.targetSpacing)) / BigInt(actualTimespan);
+    if (projectedWork <= BigInt(0)) return Buffer.from(prev.bits);
+
+    let nextTarget = (WORK_BASE - projectedWork) / projectedWork;
     if (nextTarget > this.maxTarget) nextTarget = this.maxTarget;
     return targetToCompact(nextTarget);
   }

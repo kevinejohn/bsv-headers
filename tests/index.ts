@@ -1,4 +1,4 @@
-import Headers from "../src";
+import Headers, { FORK_BLOCK_HASHES, NetworkName } from "../src";
 import assert from "assert";
 import * as bsv from "bsv-minimal";
 
@@ -179,26 +179,37 @@ test("validates expected difficulty unless a network rule hook overrides it", ()
   );
 });
 
-test("ignores difficulty mismatch for the BCH/BSV fork block", () => {
-  const forkHash =
-    "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec";
+test("ignores difficulty mismatch for configured ticker fork blocks", () => {
   const genesisHash = getHeaderHash(headerHexs[0]);
-  const rejected = new Headers({ validateProofOfWork: false });
-  assert.equal(
-    rejected.addHeader({
-      header: syntheticHeader(syntheticHash(100), genesisHash, 100, "1c00ffff"),
-    }),
-    false
-  );
+  const cases: [NetworkName, string[]][] = [
+    ["BTC", FORK_BLOCK_HASHES.BTC],
+    ["BCH", FORK_BLOCK_HASHES.BCH],
+    ["BSV", FORK_BLOCK_HASHES.BSV],
+  ];
 
-  const accepted = new Headers({ validateProofOfWork: false });
-  assert.equal(
-    accepted.addHeader({
-      header: syntheticHeader(forkHash, genesisHash, 100, "1c00ffff"),
-    }),
-    true
-  );
-  assert.equal(accepted.getHash(1), forkHash);
+  for (const [network, hashes] of cases) {
+    for (const forkHash of hashes) {
+      const headers = new Headers({ network, validateProofOfWork: false });
+      assert.equal(
+        headers.addHeader({
+          header: syntheticHeader(forkHash, genesisHash, 100, "1c00ffff"),
+        }),
+        true
+      );
+      assert.equal(headers.getHash(1), forkHash);
+    }
+  }
+
+  for (const [network, hashes] of cases) {
+    const otherHash = syntheticHash(999999);
+    const headers = new Headers({ network, validateProofOfWork: false });
+    assert.equal(
+      headers.addHeader({
+        header: syntheticHeader(otherHash, genesisHash, 100, "1c00ffff"),
+      }),
+      false
+    );
+  }
 });
 
 test("selects accumulated work over height", () => {

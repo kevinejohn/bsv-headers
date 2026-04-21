@@ -6,7 +6,7 @@
 
 # Interface: AddHeaderOptions
 
-Defined in: [index.ts:62](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L62)
+Defined in: [index.ts:86](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L86)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:62](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **buf?**: `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: [index.ts:63](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L63)
+Defined in: [index.ts:87](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L87)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:63](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **genesis?**: `boolean`
 
-Defined in: [index.ts:66](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L66)
+Defined in: [index.ts:90](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L90)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:66](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **hash?**: `string` \| `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: [index.ts:65](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L65)
+Defined in: [index.ts:89](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L89)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [index.ts:65](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **header?**: `Header`
 
-Defined in: [index.ts:64](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L64)
+Defined in: [index.ts:88](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L88)

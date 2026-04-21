@@ -6,7 +6,7 @@
 
 # Interface: SerializedHeaderEntry
 
-Defined in: [index.ts:74](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L74)
+Defined in: [index.ts:98](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L98)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:74](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **bits**: `string`
 
-Defined in: [index.ts:78](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L78)
+Defined in: [index.ts:102](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L102)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:78](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **buffer**: `string`
 
-Defined in: [index.ts:80](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L80)
+Defined in: [index.ts:104](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L104)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:80](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **chainWork?**: `string`
 
-Defined in: [index.ts:82](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L82)
+Defined in: [index.ts:106](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L106)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [index.ts:82](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **hash**: `string`
 
-Defined in: [index.ts:75](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L75)
+Defined in: [index.ts:99](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L99)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:75](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **height?**: `number`
 
-Defined in: [index.ts:83](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L83)
+Defined in: [index.ts:107](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L107)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [index.ts:83](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **next**: `string`[]
 
-Defined in: [index.ts:77](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L77)
+Defined in: [index.ts:101](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L101)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [index.ts:77](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **prev**: `string`
 
-Defined in: [index.ts:76](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L76)
+Defined in: [index.ts:100](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L100)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [index.ts:76](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **time**: `number`
 
-Defined in: [index.ts:79](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L79)
+Defined in: [index.ts:103](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L103)
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: [index.ts:79](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > **work**: `string`
 
-Defined in: [index.ts:81](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L81)
+Defined in: [index.ts:105](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L105)

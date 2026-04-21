@@ -6,7 +6,7 @@
 
 # Interface: GetHeaderOptions
 
-Defined in: [index.ts:69](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L69)
+Defined in: [index.ts:93](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L93)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:69](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **hash?**: `string` \| `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: [index.ts:70](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L70)
+Defined in: [index.ts:94](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L94)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [index.ts:70](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **height?**: `number`
 
-Defined in: [index.ts:71](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L71)
+Defined in: [index.ts:95](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L95)

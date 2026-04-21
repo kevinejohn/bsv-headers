@@ -6,6 +6,6 @@
 
 # Type Alias: NetworkName
 
-> **NetworkName** = `"mainnet"`
+> **NetworkName** = `"mainnet"` \| [`ChainTicker`](ChainTicker.md)
 
-Defined in: [index.ts:6](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L6)
+Defined in: [index.ts:7](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L7)

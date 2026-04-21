@@ -8,7 +8,7 @@
 
 > **ExpectedBitsFn** = (`context`) => `string` \| `Buffer` \| `undefined`
 
-Defined in: [index.ts:32](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L32)
+Defined in: [index.ts:48](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L48)
 
 ## Parameters
 

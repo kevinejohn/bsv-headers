@@ -29,7 +29,7 @@ const headers = new BsvHeaders({
   maxReorgDepth: 1000, // How far back to recalculate the best-work chain. Set to 0 to always recalculate from genesis (slower)
   validateProofOfWork: true, // Reject headers whose hash does not satisfy their compact target
   validateDifficulty: true, // Reject headers whose bits do not match the active network rules
-  network: "mainnet", // Or a custom network config with retarget settings / getExpectedBits
+  network: "mainnet", // Or "BTC", "BCH", "BSV", or a custom network config
   maxTarget: undefined, // Optional maximum target. Defaults to the genesis header target
   logger: undefined, // Optional { debug, warn } callbacks. Quiet by default
 });
@@ -72,15 +72,18 @@ console.log(restored.getTip());
 
 ## Network rules
 
-By default, `bsv-headers` uses legacy mainnet-style difficulty retargeting:
+By default, `bsv-headers` uses legacy mainnet-style difficulty retargeting. Built-in ticker networks adjust the expected difficulty rules for their known fork eras:
 
 - proof-of-work must satisfy the compact target in each header
 - compact targets may not exceed `maxTarget`
-- non-retarget blocks must keep the previous block's `bits`
-- retarget blocks are checked with the configured interval and target timespan
-- the BCH/BSV fork block `000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec` skips only the expected-`bits` comparison
+- `BTC` uses legacy Bitcoin retargeting
+- `BCH` and `BSV` use legacy retargeting before the BCH split, BCH Emergency Difficulty Adjustment from height 478559, and CW-144 from the Nov 2017 DAA activation
+- configured fork blocks skip only the expected-`bits` comparison:
+  - `BTC`: `00000000000000000019f112ec0a9982926f1258cdcc558dd7c3b7e5dc7fa148`
+  - `BCH`: `000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec`, `0000000000000000004626ff6e3b936941d341c5932ece4357eeccac44e6d56c`
+  - `BSV`: `000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec`, `000000000000000001d956714215d96ffc00e0afda4cd0a96c96f8d802b1662b`
 
-For chains or eras with different rules, pass a custom network config or a `getExpectedBits` callback. The callback receives the candidate header, height, previous header metadata, and the `Headers` instance, and should return the expected compact bits as a 4-byte buffer or hex string.
+For chains or eras with different rules, pass a custom network config, `difficultyExceptionHashes`, or a `getExpectedBits` callback. The callback receives the candidate header, height, previous header metadata, and the `Headers` instance, and should return the expected compact bits as a 4-byte buffer or hex string.
 
 ## Public state
 

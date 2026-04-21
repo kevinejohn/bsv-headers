@@ -22,9 +22,12 @@
 
 ## Type Aliases
 
+- [ChainTicker](type-aliases/ChainTicker.md)
+- [DifficultyAlgorithm](type-aliases/DifficultyAlgorithm.md)
 - [ExpectedBitsFn](type-aliases/ExpectedBitsFn.md)
 - [NetworkName](type-aliases/NetworkName.md)
 
 ## Variables
 
+- [FORK\_BLOCK\_HASHES](variables/FORK_BLOCK_HASHES.md)
 - [GENESIS\_HEADER](variables/GENESIS_HEADER.md)

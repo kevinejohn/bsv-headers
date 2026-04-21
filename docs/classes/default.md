@@ -6,7 +6,7 @@
 
 # Class: default
 
-Defined in: [index.ts:332](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L332)
+Defined in: [index.ts:429](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L429)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:332](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **new default**(`opts?`): `Headers`
 
-Defined in: [index.ts:353](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L353)
+Defined in: [index.ts:454](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L454)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [index.ts:353](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **addHeader**(`__namedParameters`): `boolean`
 
-Defined in: [index.ts:500](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L500)
+Defined in: [index.ts:619](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L619)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: [index.ts:500](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getChainWork**(`hash?`): `bigint`
 
-Defined in: [index.ts:740](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L740)
+Defined in: [index.ts:859](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L859)
 
 #### Parameters
 
@@ -68,7 +68,7 @@ Defined in: [index.ts:740](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getChildren**(`hash`): `string`[]
 
-Defined in: [index.ts:735](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L735)
+Defined in: [index.ts:854](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L854)
 
 #### Parameters
 
@@ -86,7 +86,7 @@ Defined in: [index.ts:735](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getFromHeaderArray**(): `string`[]
 
-Defined in: [index.ts:701](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L701)
+Defined in: [index.ts:820](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L820)
 
 #### Returns
 
@@ -98,7 +98,7 @@ Defined in: [index.ts:701](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getHash**(`height`): `string`
 
-Defined in: [index.ts:689](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L689)
+Defined in: [index.ts:808](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L808)
 
 #### Parameters
 
@@ -116,7 +116,7 @@ Defined in: [index.ts:689](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getHeader**(`__namedParameters`): `Header` \| `undefined`
 
-Defined in: [index.ts:717](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L717)
+Defined in: [index.ts:836](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L836)
 
 #### Parameters
 
@@ -134,7 +134,7 @@ Defined in: [index.ts:717](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getHeaderBuffer**(`__namedParameters`): `Buffer`\<`ArrayBufferLike`\> \| `undefined`
 
-Defined in: [index.ts:722](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L722)
+Defined in: [index.ts:841](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L841)
 
 #### Parameters
 
@@ -152,7 +152,7 @@ Defined in: [index.ts:722](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getHeaderMeta**(`hashOrHeight`): [`HeaderMeta`](../interfaces/HeaderMeta.md) \| `undefined`
 
-Defined in: [index.ts:727](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L727)
+Defined in: [index.ts:846](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L846)
 
 #### Parameters
 
@@ -170,7 +170,7 @@ Defined in: [index.ts:727](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getHeight**(`hash?`): `number`
 
-Defined in: [index.ts:677](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L677)
+Defined in: [index.ts:796](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L796)
 
 #### Parameters
 
@@ -188,7 +188,7 @@ Defined in: [index.ts:677](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getInvalidBlocks**(): `string`[]
 
-Defined in: [index.ts:749](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L749)
+Defined in: [index.ts:868](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L868)
 
 #### Returns
 
@@ -200,7 +200,7 @@ Defined in: [index.ts:749](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **getTip**(): `object`
 
-Defined in: [index.ts:696](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L696)
+Defined in: [index.ts:815](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L815)
 
 #### Returns
 
@@ -220,7 +220,7 @@ Defined in: [index.ts:696](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **hasHeader**(`hash`): `boolean`
 
-Defined in: [index.ts:713](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L713)
+Defined in: [index.ts:832](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L832)
 
 #### Parameters
 
@@ -238,7 +238,7 @@ Defined in: [index.ts:713](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **invalidateBlock**(`hash`): `void`
 
-Defined in: [index.ts:652](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L652)
+Defined in: [index.ts:771](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L771)
 
 #### Parameters
 
@@ -256,7 +256,7 @@ Defined in: [index.ts:652](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **process**(): \{ `bits`: `Buffer`; `buffer`: `Buffer`; `chainWork?`: `bigint`; `hash`: `string`; `height?`: `number`; `next`: `string`[]; `prev`: `string`; `time`: `number`; `work`: `bigint`; \} \| `undefined`
 
-Defined in: [index.ts:546](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L546)
+Defined in: [index.ts:665](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L665)
 
 #### Returns
 
@@ -268,7 +268,7 @@ Defined in: [index.ts:546](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **toJSON**(): [`SerializedHeaders`](../interfaces/SerializedHeaders.md)
 
-Defined in: [index.ts:753](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L753)
+Defined in: [index.ts:872](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L872)
 
 #### Returns
 
@@ -280,7 +280,7 @@ Defined in: [index.ts:753](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > `static` **fromJSON**(`data`, `opts?`): `Headers`
 
-Defined in: [index.ts:403](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L403)
+Defined in: [index.ts:514](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L514)
 
 #### Parameters
 

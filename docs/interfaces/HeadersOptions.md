@@ -6,15 +6,47 @@
 
 # Interface: HeadersOptions
 
-Defined in: [index.ts:47](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L47)
+Defined in: [index.ts:67](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L67)
 
 ## Properties
+
+### cashDaaActivationHeight?
+
+> `optional` **cashDaaActivationHeight?**: `number`
+
+Defined in: [index.ts:76](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L76)
+
+***
+
+### cashForkHeight?
+
+> `optional` **cashForkHeight?**: `number`
+
+Defined in: [index.ts:75](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L75)
+
+***
+
+### difficultyAlgorithm?
+
+> `optional` **difficultyAlgorithm?**: [`DifficultyAlgorithm`](../type-aliases/DifficultyAlgorithm.md)
+
+Defined in: [index.ts:74](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L74)
+
+***
+
+### difficultyExceptionHashes?
+
+> `optional` **difficultyExceptionHashes?**: (`string` \| `Buffer`\<`ArrayBufferLike`\>)[]
+
+Defined in: [index.ts:73](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L73)
+
+***
 
 ### genesisHeader?
 
 > `optional` **genesisHeader?**: `string` \| `Header` \| `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: [index.ts:48](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L48)
+Defined in: [index.ts:68](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L68)
 
 ***
 
@@ -22,7 +54,7 @@ Defined in: [index.ts:48](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **getExpectedBits?**: [`ExpectedBitsFn`](../type-aliases/ExpectedBitsFn.md)
 
-Defined in: [index.ts:58](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L58)
+Defined in: [index.ts:82](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L82)
 
 ***
 
@@ -30,7 +62,7 @@ Defined in: [index.ts:58](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **invalidBlocks?**: `string`[]
 
-Defined in: [index.ts:49](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L49)
+Defined in: [index.ts:69](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L69)
 
 ***
 
@@ -38,7 +70,7 @@ Defined in: [index.ts:49](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **logger?**: `false` \| [`HeadersLogger`](HeadersLogger.md) \| `null`
 
-Defined in: [index.ts:59](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L59)
+Defined in: [index.ts:83](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L83)
 
 ***
 
@@ -46,7 +78,7 @@ Defined in: [index.ts:59](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **maxReorgDepth?**: `number`
 
-Defined in: [index.ts:50](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L50)
+Defined in: [index.ts:70](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L70)
 
 ***
 
@@ -54,15 +86,15 @@ Defined in: [index.ts:50](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **maxTarget?**: `string` \| `bigint` \| `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: [index.ts:51](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L51)
+Defined in: [index.ts:71](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L71)
 
 ***
 
 ### network?
 
-> `optional` **network?**: [`NetworkOptions`](NetworkOptions.md) \| `"mainnet"`
+> `optional` **network?**: [`NetworkName`](../type-aliases/NetworkName.md) \| [`NetworkOptions`](NetworkOptions.md)
 
-Defined in: [index.ts:52](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L52)
+Defined in: [index.ts:72](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L72)
 
 ***
 
@@ -70,7 +102,7 @@ Defined in: [index.ts:52](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **retargetInterval?**: `number`
 
-Defined in: [index.ts:54](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L54)
+Defined in: [index.ts:78](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L78)
 
 ***
 
@@ -78,7 +110,7 @@ Defined in: [index.ts:54](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **targetSpacing?**: `number`
 
-Defined in: [index.ts:53](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L53)
+Defined in: [index.ts:77](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L77)
 
 ***
 
@@ -86,7 +118,7 @@ Defined in: [index.ts:53](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **targetTimespan?**: `number`
 
-Defined in: [index.ts:55](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L55)
+Defined in: [index.ts:79](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L79)
 
 ***
 
@@ -94,7 +126,7 @@ Defined in: [index.ts:55](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **validateDifficulty?**: `boolean`
 
-Defined in: [index.ts:56](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L56)
+Defined in: [index.ts:80](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L80)
 
 ***
 
@@ -102,4 +134,4 @@ Defined in: [index.ts:56](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **validateProofOfWork?**: `boolean`
 
-Defined in: [index.ts:57](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L57)
+Defined in: [index.ts:81](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L81)

@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.0.3
+
+### Added
+
+- Added ticker-specific fork block difficulty exceptions for `BTC`, `BCH`, and `BSV` via built-in network names and exported `FORK_BLOCK_HASHES`.
+- Added `difficultyExceptionHashes` for custom network/header configurations.
+- Implemented BCH/BSV historical difficulty rule selection from the BCH split:
+  - legacy Bitcoin retargeting before the BCH fork
+  - BCH Emergency Difficulty Adjustment from height 478559
+  - CW-144 DAA from the Nov 2017 DAA activation
+
 ## 3.0.2
 
 ### Fixed
