@@ -44,6 +44,29 @@ function replacePrevHash(headerHex: string, prevHash: string): string {
   return buf.toString("hex");
 }
 
+function syntheticHash(index: number): string {
+  return index.toString(16).padStart(64, "0");
+}
+
+function syntheticHeader(
+  hash: string,
+  prevHash: string,
+  index: number
+): bsv.Header {
+  const buf = Buffer.from(headerHexs[0], "hex");
+  Buffer.from(prevHash, "hex").reverse().copy(buf, 4);
+  buf.writeUInt32LE(1231006505 + index, 68);
+  buf.writeUInt32LE(index, 76);
+  return {
+    prevHash: Buffer.from(prevHash, "hex"),
+    bits: Buffer.from("1d00ffff", "hex"),
+    time: 1231006505 + index,
+    toBuffer: () => Buffer.from(buf),
+    getHash: (hexStr?: boolean) =>
+      hexStr ? hash : Buffer.from(hash, "hex"),
+  } as unknown as bsv.Header;
+}
+
 function buildHeadersWithMainChain(): Headers {
   const headers = new Headers();
   for (const headerHex of headerHexs) {
@@ -212,6 +235,23 @@ test("removes descendants when a deferred parent fails validation", () => {
   headers.process();
   assert.equal(headers.hasHeader(invalidParentHash), false);
   assert.equal(headers.hasHeader(descendantHash), false);
+});
+
+test("processes deep unlinked chains without overflowing the call stack", () => {
+  const count = 15000;
+  const headers = new Headers({
+    validateProofOfWork: false,
+    getExpectedBits: () => "1d00ffff",
+  });
+  const genesisHash = getHeaderHash(headerHexs[0]);
+  for (let i = count; i >= 1; i--) {
+    const hash = syntheticHash(i);
+    const prevHash = i === 1 ? genesisHash : syntheticHash(i - 1);
+    headers.addHeader({ header: syntheticHeader(hash, prevHash, i) });
+  }
+
+  assert.equal(headers.getHeight(), count);
+  assert.equal(headers.getHash(count), syntheticHash(count));
 });
 
 test("exposes read-only header lookups and metadata", () => {

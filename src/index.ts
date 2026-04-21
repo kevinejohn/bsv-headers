@@ -254,28 +254,51 @@ function getAncestorChainWork(
   headers: Record<string, HeaderEntry>,
   hash: string
 ): bigint {
-  const header = headers[hash];
+  let header = headers[hash];
   if (!header) throw Error(`Missing header ${hash}`);
   if (header.chainWork !== undefined) return header.chainWork;
 
-  const prev = headers[header.prev];
-  header.chainWork = prev
-    ? getAncestorChainWork(headers, header.prev) + header.work
-    : header.work;
-  return header.chainWork;
+  const path: HeaderEntry[] = [];
+  const seen = new Set<string>();
+  while (header && header.chainWork === undefined) {
+    if (seen.has(header.hash)) throw Error(`Loop detected in header chain`);
+    seen.add(header.hash);
+    path.push(header);
+    header = headers[header.prev];
+  }
+
+  let chainWork = header?.chainWork || BigInt(0);
+  for (let i = path.length - 1; i >= 0; i--) {
+    chainWork += path[i].work;
+    path[i].chainWork = chainWork;
+  }
+  return path[0].chainWork!;
 }
 
 function getAncestorHeight(
   headers: Record<string, HeaderEntry>,
   hash: string
 ): number | undefined {
-  const header = headers[hash];
+  let header = headers[hash];
   if (!header) return undefined;
   if (header.height !== undefined) return header.height;
-  const prevHeight = getAncestorHeight(headers, header.prev);
-  if (prevHeight === undefined) return undefined;
-  header.height = prevHeight + 1;
-  return header.height;
+
+  const path: HeaderEntry[] = [];
+  const seen = new Set<string>();
+  while (header && header.height === undefined) {
+    if (seen.has(header.hash)) return undefined;
+    seen.add(header.hash);
+    path.push(header);
+    header = headers[header.prev];
+  }
+  if (!header || header.height === undefined) return undefined;
+
+  let height = header.height;
+  for (let i = path.length - 1; i >= 0; i--) {
+    height++;
+    path[i].height = height;
+  }
+  return path[0].height;
 }
 
 function getAncestorAtHeight(

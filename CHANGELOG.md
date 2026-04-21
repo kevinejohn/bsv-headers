@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.1
+
+### Fixed
+
+- Replaced recursive ancestor height and chainwork traversal with iterative traversal so very long unprocessed or out-of-order header chains do not overflow the JavaScript call stack.
+- Added a deep unlinked-chain regression test covering long chains processed after their ancestors arrive.
+
 ## 3.0.0
 
 ### Breaking changes
