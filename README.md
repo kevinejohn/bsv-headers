@@ -2,11 +2,11 @@
 
 [![NPM Package](https://img.shields.io/npm/v/bsv-headers.svg?style=flat-square)](https://www.npmjs.org/package/bsv-headers)
 
-Determine longest bitcoin chain and query block order
+Determine the best-work bitcoin header chain and query block order
 
 ## Note
 
-You must use node.js v12+
+You must use node.js v18+
 
 ## Install
 
@@ -26,21 +26,32 @@ const BsvHeaders = require("bsv-headers").default;
 const headers = new BsvHeaders({
   genesisHeader: "<Buffer or hex string of genesis header>",
   invalidBlocks: [],
-  maxReorgDepth: 1000, // How far back to recalculate longest chain after adding new block headers. Set to 0 to always recalculate from genesis (slower)
+  maxReorgDepth: 1000, // How far back to recalculate the best-work chain. Set to 0 to always recalculate from genesis (slower)
+  validateProofOfWork: true, // Reject headers whose hash does not satisfy their compact target
+  validateDifficulty: true, // Reject headers whose bits do not match the active network rules
+  network: "mainnet", // Or a custom network config with retarget settings / getExpectedBits
+  maxTarget: undefined, // Optional maximum target. Defaults to the genesis header target
+  logger: undefined, // Optional { debug, warn } callbacks. Quiet by default
 });
 
 // const buf = Buffer.from(/* <an 80 byte bitcoin block header> */)
-// headers.addHeader({ buf, /* hash: <Optional: 32 byte buffer or 64 char string hex string of buf block hash. Used for performance> */ })
+// headers.addHeader({ buf, /* hash: <Optional: 32 byte buffer or 64 char hex string matching buf. Used for performance> */ })
 // // ...
 // // Add all block headers
 // // ...
-// headers.addHeader({ buf, /* hash: <Optional: 32 byte buffer or 64 char string hex string of buf block hash. Used for performance> */ })
+// headers.addHeader({ buf, /* hash: <Optional: 32 byte buffer or 64 char hex string matching buf. Used for performance> */ })
 
 const tip = headers.getTip();
 console.log(`Chain tip: ${tip.height} ${tip.hash}`);
 
 const hash = headers.getHash(0);
 console.log(`Block 0 hash: ${hash}`);
+
+const header1 = headers.getHeader({ height: 1 });
+const header2 = headers.getHeader({
+  hash: "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+});
+console.log(header1, header2);
 
 const height = headers.getHeight(
   "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
@@ -49,17 +60,34 @@ console.log(
   `Block 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f height: ${height}`
 );
 
-const header1 = headers.getHeader({
-  hash: "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
-});
-const header2 = headers.getHeader({ height: 0 });
-console.log(header1, header2);
-
 headers.invalidateBlock(
   "00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048"
 );
 console.log(headers.getTip());
+
+const snapshot = headers.toJSON();
+const restored = BsvHeaders.fromJSON(snapshot);
+console.log(restored.getTip());
 ```
+
+## Network rules
+
+By default, `bsv-headers` uses legacy mainnet-style difficulty retargeting:
+
+- proof-of-work must satisfy the compact target in each header
+- compact targets may not exceed `maxTarget`
+- non-retarget blocks must keep the previous block's `bits`
+- retarget blocks are checked with the configured interval and target timespan
+
+For chains or eras with different rules, pass a custom network config or a `getExpectedBits` callback. The callback receives the candidate header, height, previous header metadata, and the `Headers` instance, and should return the expected compact bits as a 4-byte buffer or hex string.
+
+## Public state
+
+Internal chain indexes are private. Use `getHeader`, `getHeaderBuffer`, `getHeaderMeta`, `getChildren`, `getChainWork`, `getInvalidBlocks`, `hasHeader`, `toJSON`, and `fromJSON` instead of mutating internal state.
+
+## Security boundaries
+
+This package validates header hashes, proof-of-work, best-work selection, and configured difficulty rules. It is still a header manager, not a full node: callers are responsible for choosing the right network rules, persisting trusted snapshots appropriately, validating block contents, and handling peer/network policy.
 
 ## Tests
 
@@ -67,4 +95,4 @@ console.log(headers.getTip());
 
 ## Future features
 
-- Validate block difficulty
+- Built-in network configs for additional BSV eras and test networks

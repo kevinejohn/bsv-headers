@@ -8,4 +8,6 @@ module.exports = {
   readme: "none",
   githubPages: false,
   gitRevision: "master",
+  excludePrivate: true,
+  excludeProtected: true,
 };

@@ -1,282 +1,297 @@
+[**bsv-headers**](../README.md)
+
+***
+
 [bsv-headers](../README.md) / default
 
 # Class: default
 
-## Table of contents
-
-### Constructors
-
-- [constructor](default.md#constructor)
-
-### Properties
-
-- [chain](default.md#chain)
-- [genesis](default.md#genesis)
-- [genesisHeader](default.md#genesisheader)
-- [headers](default.md#headers)
-- [invalidBlocks](default.md#invalidblocks)
-- [invalidatedBlock](default.md#invalidatedblock)
-- [maxReorgDepth](default.md#maxreorgdepth)
-- [processed](default.md#processed)
-- [tip](default.md#tip)
-- [unlinked](default.md#unlinked)
-
-### Methods
-
-- [addHeader](default.md#addheader)
-- [getFromHeaderArray](default.md#getfromheaderarray)
-- [getHash](default.md#gethash)
-- [getHeight](default.md#getheight)
-- [getTip](default.md#gettip)
-- [invalidateBlock](default.md#invalidateblock)
-- [process](default.md#process)
+Defined in: [index.ts:306](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L306)
 
 ## Constructors
 
-### constructor
+### Constructor
 
-• **new default**(`opts?`)
+> **new default**(`opts?`): `Headers`
+
+Defined in: [index.ts:327](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L327)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `opts` | [`HeadersOptions`](../interfaces/HeadersOptions.md) |
+##### opts?
 
-#### Defined in
+[`HeadersOptions`](../interfaces/HeadersOptions.md) = `{}`
 
-[index.ts:34](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L34)
+#### Returns
 
-## Properties
-
-### chain
-
-• **chain**: `Record`<`string`, `string`\>
-
-#### Defined in
-
-[index.ts:26](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L26)
-
-___
-
-### genesis
-
-• **genesis**: `string`
-
-#### Defined in
-
-[index.ts:30](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L30)
-
-___
-
-### genesisHeader
-
-• **genesisHeader**: `default`
-
-#### Defined in
-
-[index.ts:31](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L31)
-
-___
-
-### headers
-
-• **headers**: `Record`<`string`, { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }\>
-
-#### Defined in
-
-[index.ts:22](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L22)
-
-___
-
-### invalidBlocks
-
-• **invalidBlocks**: `Set`<`string`\>
-
-#### Defined in
-
-[index.ts:20](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L20)
-
-___
-
-### invalidatedBlock
-
-• **invalidatedBlock**: `boolean`
-
-#### Defined in
-
-[index.ts:29](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L29)
-
-___
-
-### maxReorgDepth
-
-• **maxReorgDepth**: `number`
-
-#### Defined in
-
-[index.ts:21](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L21)
-
-___
-
-### processed
-
-• **processed**: `boolean`
-
-#### Defined in
-
-[index.ts:28](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L28)
-
-___
-
-### tip
-
-• **tip**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `hash` | `string` |
-| `height` | `number` |
-
-#### Defined in
-
-[index.ts:32](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L32)
-
-___
-
-### unlinked
-
-• **unlinked**: `Record`<`string`, { `hash`: `string` ; `next`: `string`[] ; `prev`: `string`  }\>
-
-#### Defined in
-
-[index.ts:27](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L27)
+`Headers`
 
 ## Methods
 
-### addHeader
+### addHeader()
 
-▸ **addHeader**(`__namedParameters`): `boolean`
+> **addHeader**(`__namedParameters`): `boolean`
+
+Defined in: [index.ts:474](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L474)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `__namedParameters` | [`AddHeaderOptions`](../interfaces/AddHeaderOptions.md) |
+##### \_\_namedParameters
+
+[`AddHeaderOptions`](../interfaces/AddHeaderOptions.md)
 
 #### Returns
 
 `boolean`
 
-#### Defined in
+***
 
-[index.ts:61](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L61)
+### getChainWork()
 
-___
+> **getChainWork**(`hash?`): `bigint`
 
-### getFromHeaderArray
+Defined in: [index.ts:714](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L714)
 
-▸ **getFromHeaderArray**(): `string`[]
+#### Parameters
+
+##### hash?
+
+`string` \| `Buffer`\<`ArrayBufferLike`\>
+
+#### Returns
+
+`bigint`
+
+***
+
+### getChildren()
+
+> **getChildren**(`hash`): `string`[]
+
+Defined in: [index.ts:709](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L709)
+
+#### Parameters
+
+##### hash
+
+`string` \| `Buffer`\<`ArrayBufferLike`\>
 
 #### Returns
 
 `string`[]
 
-#### Defined in
+***
 
-[index.ts:204](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L204)
+### getFromHeaderArray()
 
-___
+> **getFromHeaderArray**(): `string`[]
 
-### getHash
+Defined in: [index.ts:675](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L675)
 
-▸ **getHash**(`height`): `string`
+#### Returns
+
+`string`[]
+
+***
+
+### getHash()
+
+> **getHash**(`height`): `string`
+
+Defined in: [index.ts:663](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L663)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `height` | `number` |
+##### height
+
+`number`
 
 #### Returns
 
 `string`
 
-#### Defined in
+***
 
-[index.ts:192](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L192)
+### getHeader()
 
-___
+> **getHeader**(`__namedParameters`): `Header` \| `undefined`
 
-### getHeight
-
-▸ **getHeight**(`hash?`): `number`
+Defined in: [index.ts:691](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L691)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `hash?` | `string` \| `Buffer` |
+##### \_\_namedParameters
+
+[`GetHeaderOptions`](../interfaces/GetHeaderOptions.md)
+
+#### Returns
+
+`Header` \| `undefined`
+
+***
+
+### getHeaderBuffer()
+
+> **getHeaderBuffer**(`__namedParameters`): `Buffer`\<`ArrayBufferLike`\> \| `undefined`
+
+Defined in: [index.ts:696](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L696)
+
+#### Parameters
+
+##### \_\_namedParameters
+
+[`GetHeaderOptions`](../interfaces/GetHeaderOptions.md)
+
+#### Returns
+
+`Buffer`\<`ArrayBufferLike`\> \| `undefined`
+
+***
+
+### getHeaderMeta()
+
+> **getHeaderMeta**(`hashOrHeight`): [`HeaderMeta`](../interfaces/HeaderMeta.md) \| `undefined`
+
+Defined in: [index.ts:701](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L701)
+
+#### Parameters
+
+##### hashOrHeight
+
+`string` \| `number` \| `Buffer`\<`ArrayBufferLike`\>
+
+#### Returns
+
+[`HeaderMeta`](../interfaces/HeaderMeta.md) \| `undefined`
+
+***
+
+### getHeight()
+
+> **getHeight**(`hash?`): `number`
+
+Defined in: [index.ts:651](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L651)
+
+#### Parameters
+
+##### hash?
+
+`string` \| `Buffer`\<`ArrayBufferLike`\>
 
 #### Returns
 
 `number`
 
-#### Defined in
+***
 
-[index.ts:179](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L179)
+### getInvalidBlocks()
 
-___
+> **getInvalidBlocks**(): `string`[]
 
-### getTip
-
-▸ **getTip**(): `Object`
+Defined in: [index.ts:723](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L723)
 
 #### Returns
 
-`Object`
+`string`[]
 
-| Name | Type |
-| :------ | :------ |
-| `hash` | `string` |
-| `height` | `number` |
+***
 
-#### Defined in
+### getTip()
 
-[index.ts:199](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L199)
+> **getTip**(): `object`
 
-___
+Defined in: [index.ts:670](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L670)
 
-### invalidateBlock
+#### Returns
 
-▸ **invalidateBlock**(`hash`): `void`
+`object`
+
+##### hash
+
+> **hash**: `string`
+
+##### height
+
+> **height**: `number`
+
+***
+
+### hasHeader()
+
+> **hasHeader**(`hash`): `boolean`
+
+Defined in: [index.ts:687](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L687)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `hash` | `string` \| `Buffer` |
+##### hash
+
+`string` \| `Buffer`\<`ArrayBufferLike`\>
+
+#### Returns
+
+`boolean`
+
+***
+
+### invalidateBlock()
+
+> **invalidateBlock**(`hash`): `void`
+
+Defined in: [index.ts:626](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L626)
+
+#### Parameters
+
+##### hash
+
+`string` \| `Buffer`\<`ArrayBufferLike`\>
 
 #### Returns
 
 `void`
 
-#### Defined in
+***
 
-[index.ts:153](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L153)
+### process()
 
-___
+> **process**(): \{ `bits`: `Buffer`; `buffer`: `Buffer`; `chainWork?`: `bigint`; `hash`: `string`; `height?`: `number`; `next`: `string`[]; `prev`: `string`; `time`: `number`; `work`: `bigint`; \} \| `undefined`
 
-### process
-
-▸ **process**(): `undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }
+Defined in: [index.ts:520](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L520)
 
 #### Returns
 
-`undefined` \| { `hash`: `string` ; `height?`: `number` ; `next`: `string`[] ; `prev`: `string`  }
+\{ `bits`: `Buffer`; `buffer`: `Buffer`; `chainWork?`: `bigint`; `hash`: `string`; `height?`: `number`; `next`: `string`[]; `prev`: `string`; `time`: `number`; `work`: `bigint`; \} \| `undefined`
 
-#### Defined in
+***
 
-[index.ts:93](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L93)
+### toJSON()
+
+> **toJSON**(): [`SerializedHeaders`](../interfaces/SerializedHeaders.md)
+
+Defined in: [index.ts:727](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L727)
+
+#### Returns
+
+[`SerializedHeaders`](../interfaces/SerializedHeaders.md)
+
+***
+
+### fromJSON()
+
+> `static` **fromJSON**(`data`, `opts?`): `Headers`
+
+Defined in: [index.ts:377](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L377)
+
+#### Parameters
+
+##### data
+
+[`SerializedHeaders`](../interfaces/SerializedHeaders.md)
+
+##### opts?
+
+[`HeadersOptions`](../interfaces/HeadersOptions.md) = `{}`
+
+#### Returns
+
+`Headers`

@@ -1,10 +1,18 @@
 {
   "name": "bsv-headers",
-  "version": "1.0.2",
-  "description": "Determine longest bitcoin chain and query block order",
+  "version": "3.0.0",
+  "description": "Determine best-work bitcoin header chain and query block order",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
   "files": [
+    "CHANGELOG.md",
     "lib",
     "src"
   ],
@@ -35,15 +43,17 @@
     "Andrew Johnson <andrewj@hey.com>"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "bsv-minimal": "^1.0.4",
-    "source-map-support": "^0.5.21"
+    "bsv-minimal": "^3.0.1"
   },
   "devDependencies": {
-    "@types/node": "^18.7.22",
-    "ts-node": "^10.9.1",
-    "typedoc": "^0.23.15",
-    "typedoc-plugin-markdown": "^3.13.6",
-    "typescript": "^4.8.3"
+    "@types/node": "^25.6.0",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.28.19",
+    "typedoc-plugin-markdown": "^4.11.0",
+    "typescript": "^6.0.3"
   }
 }

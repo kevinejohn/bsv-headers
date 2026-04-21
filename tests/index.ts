@@ -2,6 +2,13 @@ import Headers from "../src";
 import assert from "assert";
 import * as bsv from "bsv-minimal";
 
+type TestFn = () => void;
+const tests: { name: string; fn: TestFn }[] = [];
+
+function test(name: string, fn: TestFn) {
+  tests.push({ name, fn });
+}
+
 const headerHexs = [
   "0100000000000000000000000000000000000000000000000000000000000000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a29ab5f49ffff001d1dac2b7c", // 0 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
   "010000006fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d6190000000000982051fd1e4ba744bbbe680e1fee14677ba1a3c3540bf7b1cdb606e857233e0e61bc6649ffff001d01e36299", // 1 00000000839a8e6886ab5951d76f411475428afc90947ee320161bbf18eb6048
@@ -14,98 +21,246 @@ const headerHexs = [
   "010000004494c8cf4154bdcc0720cd4a59d9c9b285e4b146d45f061d2b6c967100000000e3855ed886605b6d4a99d5fa2ef2e9b0b164e63df3c4136bebf2d0dac0f1f7a667c86649ffff001d1c4b5666", // 8 00000000408c48f847aa786c2268fc3e6ec2af68e8468a34a28c61b7f1de0dc6
   "01000000c60ddef1b7618ca2348a46e868afc26e3efc68226c78aa47f8488c4000000000c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd37047fca6649ffff001d28404f53", // 9 000000008d9dc510f23c2657fc4f67bea30078cc05a90eb89e84cc475c080805
 ];
+
 const headerReorg = [
   "010000004494c8cf4154bdcc0720cd4a59d9c9b285e4b146d45f061d2b6c967100000000c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd37047fca6649ffff001d28404f53", // 8 cc251fcf382fe27a4bcc00635a7a5ef06f3a6453e3372c945197f4a91b6766ad. Fake header for testing. No PoW
   "01000000ad66671ba9f49751942c37e353643a6ff05e7a5a6300cc4b7ae22f38cf1f25ccc997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd37047fca6649ffff001d28404f53", // 9 5ee058e695f267fd89e7e3bc211624889af395c62244f1a680821b7c721d4340. Fake header for testing. No PoW
   "0100000040431d727c1b8280a6f14422c695f39a88241621bce3e789fd67f295e658e05ec997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd37047fca6649ffff001d28404f53", // 10 2b14928f3d59cb1e4185f38f54ad9b9af627432c9f1f055f33d60340aa145565. Fake header for testing. No PoW
 ];
 
-const headers = new Headers();
-console.log(headers.getFromHeaderArray());
-assert.equal(headers.getTip().height, 0);
+function getHeaderHash(headerHex: string): string {
+  return bsv.Header.fromBuffer(Buffer.from(headerHex, "hex")).getHash(true);
+}
 
-for (let i = 0; i < headerHexs.length; i++) {
-  const buf = Buffer.from(headerHexs[i], "hex");
-  headers.addHeader({ buf });
-  const processed = headers.process();
-  if (i === 0) {
-    assert.equal(processed, undefined); // Already added in new Headers()
-  } else {
-    assert.equal(processed && processed.height, i - 1);
+function replaceBits(headerHex: string, rawBitsHex: string): string {
+  const buf = Buffer.from(headerHex, "hex");
+  Buffer.from(rawBitsHex, "hex").copy(buf, 72);
+  return buf.toString("hex");
+}
+
+function replacePrevHash(headerHex: string, prevHash: string): string {
+  const buf = Buffer.from(headerHex, "hex");
+  Buffer.from(prevHash, "hex").reverse().copy(buf, 4);
+  return buf.toString("hex");
+}
+
+function buildHeadersWithMainChain(): Headers {
+  const headers = new Headers();
+  for (const headerHex of headerHexs) {
+    headers.addHeader({ buf: Buffer.from(headerHex, "hex") });
+  }
+  return headers;
+}
+
+function buildHeadersWithReorg(): Headers {
+  const headers = new Headers({ validateProofOfWork: false });
+  for (const headerHex of headerHexs) {
+    headers.addHeader({ buf: Buffer.from(headerHex, "hex") });
+  }
+  for (const headerHex of headerReorg) {
+    headers.addHeader({ buf: Buffer.from(headerHex, "hex") });
+  }
+  headers.process();
+  return headers;
+}
+
+test("tracks the main chain with proof-of-work validation enabled", () => {
+  const headers = buildHeadersWithMainChain();
+  assert.equal(headers.getTip().height, 9);
+  for (let i = 0; i < headerHexs.length; i++) {
+    assert.equal(headers.getHash(i), getHeaderHash(headerHexs[i]));
+  }
+});
+
+test("reorganizes to a longer synthetic branch when PoW validation is disabled", () => {
+  const headers = buildHeadersWithReorg();
+  assert.equal(headers.getTip().height, 10);
+  assert.equal(headers.getHash(8), getHeaderHash(headerReorg[0]));
+  assert.equal(headers.getHash(10), getHeaderHash(headerReorg[2]));
+});
+
+test("invalidates active branches and falls back to surviving work", () => {
+  const headers = buildHeadersWithReorg();
+  headers.invalidateBlock(getHeaderHash(headerReorg[0]));
+  assert.equal(headers.getHeight(), 9);
+  assert.equal(headers.getHash(9), getHeaderHash(headerHexs[9]));
+
+  headers.invalidateBlock(getHeaderHash(headerHexs[7]));
+  assert.equal(headers.getHeight(), 6);
+  assert.equal(headers.getHash(6), getHeaderHash(headerHexs[6]));
+});
+
+test("rejects mismatched caller-supplied hashes", () => {
+  const headers = new Headers();
+  assert.throws(
+    () =>
+      headers.addHeader({
+        buf: Buffer.from(headerHexs[1], "hex"),
+        hash: "11".repeat(32),
+      }),
+    /Header hash mismatch/
+  );
+
+  const validHeaderHash = getHeaderHash(headerHexs[1]);
+  assert.equal(
+    headers.addHeader({
+      buf: Buffer.from(headerHexs[1], "hex"),
+      hash: validHeaderHash.toUpperCase(),
+    }),
+    true
+  );
+  assert.equal(headers.getHash(1), validHeaderHash);
+});
+
+test("rejects invalid proof-of-work and too-easy targets by default", () => {
+  const warnings: string[] = [];
+  const headers = new Headers({ logger: { warn: (message) => warnings.push(message) } });
+  for (let i = 1; i <= 7; i++) {
+    headers.addHeader({ buf: Buffer.from(headerHexs[i], "hex") });
   }
 
-  assert.equal(headers.getTip().height, i);
-  console.log(`Tip: ${i}`);
-}
+  const invalidProofOfWorkHash = getHeaderHash(headerReorg[0]);
+  assert.equal(
+    headers.addHeader({ buf: Buffer.from(headerReorg[0], "hex") }),
+    false
+  );
+  assert(headers.getInvalidBlocks().includes(invalidProofOfWorkHash));
 
-console.log(headers.getFromHeaderArray());
+  const highTargetHeaderHex = replaceBits(headerHexs[1], "ffff001e");
+  const highTargetHash = getHeaderHash(highTargetHeaderHex);
+  assert.equal(
+    headers.addHeader({ buf: Buffer.from(highTargetHeaderHex, "hex") }),
+    false
+  );
+  assert(headers.getInvalidBlocks().includes(highTargetHash));
+  assert(warnings.length >= 2);
+});
 
-for (let i = 0; i < headerHexs.length; i++) {
-  const hash = headers.getHash(i);
-  const buf = Buffer.from(headerHexs[i], "hex");
-  const header = bsv.Header.fromBuffer(buf);
+test("validates expected difficulty unless a network rule hook overrides it", () => {
+  const highWorkHeaderHex = replaceBits(headerHexs[1], "ffff001c");
+  const rejected = new Headers({ validateProofOfWork: false });
+  assert.equal(
+    rejected.addHeader({ buf: Buffer.from(highWorkHeaderHex, "hex") }),
+    false
+  );
 
-  assert.equal(hash, header.getHash(true));
-  // console.log(`${i}: ${header.getHash().reverse().toString("hex")}`);
-  console.log(`${i} ${header.getHash(true)}`);
-}
+  const accepted = new Headers({
+    validateProofOfWork: false,
+    getExpectedBits: ({ height }) => (height === 1 ? "1c00ffff" : undefined),
+  });
+  assert.equal(
+    accepted.addHeader({ buf: Buffer.from(highWorkHeaderHex, "hex") }),
+    true
+  );
+});
 
-const prevTip = headers.getTip();
-for (let i = 0; i < headerReorg.length; i++) {
-  const buf = Buffer.from(headerReorg[i], "hex");
-  const header = bsv.Header.fromBuffer(buf);
-  headers.addHeader({ header });
-  // console.log(`Reorg ${i} ${header.getHash().reverse().toString("hex")}`);
-  console.log(`${i} ${header.getHash(true)}`);
-}
-const lastTip = headers.process();
-assert(lastTip);
-const currentTip = headers.getTip();
-assert.equal(prevTip.height, 9);
-assert.equal(lastTip.height, 7); // Re-org after height 7
-assert.equal(
-  lastTip.hash,
-  "0000000071966c2b1d065fd446b1e485b2c9d9594acd2007ccbd5441cfc89444"
-); // Re-org after height 7
-assert.equal(currentTip.height, 10);
-assert.equal(
-  currentTip.hash,
-  "2b14928f3d59cb1e4185f38f54ad9b9af627432c9f1f055f33d60340aa145565"
-);
-
-assert.equal(headers.getHeight(), 10);
-for (let i = 0; i <= headers.getHeight(); i++) {
-  const hash = headers.getHash(i);
-  let header;
-  if (i <= 7) {
-    header = bsv.Header.fromBuffer(Buffer.from(headerHexs[i], "hex"));
-  } else {
-    header = bsv.Header.fromBuffer(Buffer.from(headerReorg[i - 8], "hex"));
+test("selects accumulated work over height", () => {
+  const headers = new Headers({
+    validateDifficulty: false,
+    validateProofOfWork: false,
+  });
+  for (const headerHex of headerHexs) {
+    headers.addHeader({ buf: Buffer.from(headerHex, "hex") });
   }
-  console.log(`Check: ${i} ${hash}: ${header.getHash(true)}`);
-  assert.equal(hash, header.getHash(true));
+
+  const highWorkHeaderHex = replaceBits(headerHexs[1], "ffff001c");
+  const highWorkHash = getHeaderHash(highWorkHeaderHex);
+  assert.equal(
+    headers.addHeader({ buf: Buffer.from(highWorkHeaderHex, "hex") }),
+    true
+  );
+  assert.equal(headers.getTip().height, 1);
+  assert.equal(headers.getTip().hash, highWorkHash);
+  assert.equal(headers.getHash(1), highWorkHash);
+  assert.throws(() => headers.getHash(2), /No hash/);
+});
+
+test("remembers invalidations before the header is seen", () => {
+  const headers = new Headers();
+  const futureInvalidHash = getHeaderHash(headerHexs[1]);
+  headers.invalidateBlock(futureInvalidHash);
+  assert.equal(
+    headers.addHeader({ buf: Buffer.from(headerHexs[1], "hex") }),
+    false
+  );
+  assert.equal(headers.getHeight(), 0);
+});
+
+test("removes side-branch descendants after invalidating their parent", () => {
+  const headers = buildHeadersWithReorg();
+  const oldBranchHash = getHeaderHash(headerHexs[8]);
+  const oldBranchTipHash = getHeaderHash(headerHexs[9]);
+  assert.equal(headers.getHeight(oldBranchTipHash), 9);
+  headers.invalidateBlock(oldBranchHash);
+  assert.throws(() => headers.getHeight(oldBranchTipHash), /No height/);
+  assert.equal(headers.getHeight(), 10);
+});
+
+test("removes descendants when a deferred parent fails validation", () => {
+  const invalidParent = replaceBits(headerHexs[2], "ffff001c");
+  const invalidParentHash = getHeaderHash(invalidParent);
+  const descendant = replacePrevHash(headerHexs[3], invalidParentHash);
+  const descendantHash = getHeaderHash(descendant);
+  const headers = new Headers({ validateProofOfWork: false });
+
+  assert.equal(headers.addHeader({ buf: Buffer.from(invalidParent, "hex") }), false);
+  assert.equal(headers.addHeader({ buf: Buffer.from(descendant, "hex") }), true);
+  assert.equal(headers.hasHeader(invalidParentHash), true);
+  assert.equal(headers.hasHeader(descendantHash), true);
+
+  assert.equal(headers.addHeader({ buf: Buffer.from(headerHexs[1], "hex") }), true);
+  headers.process();
+  assert.equal(headers.hasHeader(invalidParentHash), false);
+  assert.equal(headers.hasHeader(descendantHash), false);
+});
+
+test("exposes read-only header lookups and metadata", () => {
+  const headers = buildHeadersWithMainChain();
+  const hash = getHeaderHash(headerHexs[1]);
+  assert.equal(headers.hasHeader(hash), true);
+  assert.equal(headers.getHeader({ hash })?.getHash(true), hash);
+  assert.equal(headers.getHeader({ height: 1 })?.getHash(true), hash);
+  assert.equal(headers.getHeaderBuffer({ height: 1 })?.toString("hex"), headerHexs[1]);
+  assert.equal(headers.getHeaderMeta(hash)?.hash, hash);
+  assert.equal(headers.getChildren(getHeaderHash(headerHexs[0]))[0], hash);
+  assert(headers.getChainWork(hash) > BigInt(0));
+  assert(headers.getChainWork() >= headers.getChainWork(hash));
+});
+
+test("serializes and restores header state", () => {
+  const headers = buildHeadersWithReorg();
+  const restored = Headers.fromJSON(headers.toJSON(), {
+    validateProofOfWork: false,
+  });
+  assert.equal(restored.getTip().height, headers.getTip().height);
+  assert.equal(restored.getTip().hash, headers.getTip().hash);
+  assert.equal(restored.getHash(10), headers.getHash(10));
+  assert.equal(restored.getChainWork().toString(), headers.getChainWork().toString());
+});
+
+test("rejects tampered serialized headers", () => {
+  const headers = buildHeadersWithMainChain();
+  const snapshot = headers.toJSON();
+  const entry = snapshot.headers.find((header) => header.height === 1);
+  assert(entry);
+  entry.hash = "22".repeat(32);
+  assert.throws(() => Headers.fromJSON(snapshot), /Serialized header hash mismatch/);
+});
+
+let failures = 0;
+for (const { name, fn } of tests) {
+  try {
+    fn();
+    console.log(`ok - ${name}`);
+  } catch (err) {
+    failures++;
+    console.error(`not ok - ${name}`);
+    console.error(err);
+  }
 }
 
-headers.invalidateBlock(
-  "cc251fcf382fe27a4bcc00635a7a5ef06f3a6453e3372c945197f4a91b6766ad"
-);
-assert.equal(headers.getHeight(), 9);
-for (let i = 0; i <= headers.getHeight(); i++) {
-  const hash = headers.getHash(i);
-  let header = bsv.Header.fromBuffer(Buffer.from(headerHexs[i], "hex"));
-  console.log(`Check: ${i} ${hash}: ${header.getHash(true)}`);
-  assert.equal(hash, header.getHash(true));
+if (failures > 0) {
+  process.exitCode = 1;
+} else {
+  console.log(`${tests.length} tests passed`);
 }
-
-headers.invalidateBlock(
-  "0000000071966c2b1d065fd446b1e485b2c9d9594acd2007ccbd5441cfc89444"
-);
-assert.equal(headers.getHeight(), 6);
-for (let i = 0; i <= headers.getHeight(); i++) {
-  const hash = headers.getHash(i);
-  let header = bsv.Header.fromBuffer(Buffer.from(headerHexs[i], "hex"));
-  console.log(`Check: ${i} ${hash}: ${header.getHash(true)}`);
-  assert.equal(hash, header.getHash(true));
-}
-
-console.log(`Tests passed`);

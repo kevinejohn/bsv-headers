@@ -1,52 +1,41 @@
+[**bsv-headers**](../README.md)
+
+***
+
 [bsv-headers](../README.md) / AddHeaderOptions
 
 # Interface: AddHeaderOptions
 
-## Table of contents
-
-### Properties
-
-- [buf](AddHeaderOptions.md#buf)
-- [genesis](AddHeaderOptions.md#genesis)
-- [hash](AddHeaderOptions.md#hash)
-- [header](AddHeaderOptions.md#header)
+Defined in: [index.ts:62](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L62)
 
 ## Properties
 
-### buf
+### buf?
 
-• `Optional` **buf**: `Buffer`
+> `optional` **buf?**: `Buffer`\<`ArrayBufferLike`\>
 
-#### Defined in
+Defined in: [index.ts:63](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L63)
 
-[index.ts:13](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L13)
+***
 
-___
+### genesis?
 
-### genesis
+> `optional` **genesis?**: `boolean`
 
-• `Optional` **genesis**: `boolean`
+Defined in: [index.ts:66](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L66)
 
-#### Defined in
+***
 
-[index.ts:16](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L16)
+### hash?
 
-___
+> `optional` **hash?**: `string` \| `Buffer`\<`ArrayBufferLike`\>
 
-### hash
+Defined in: [index.ts:65](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L65)
 
-• `Optional` **hash**: `string` \| `Buffer`
+***
 
-#### Defined in
+### header?
 
-[index.ts:15](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L15)
+> `optional` **header?**: `Header`
 
-___
-
-### header
-
-• `Optional` **header**: `default`
-
-#### Defined in
-
-[index.ts:14](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L14)
+Defined in: [index.ts:64](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L64)
