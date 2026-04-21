@@ -52,17 +52,18 @@ function syntheticHeader(
   hash: string,
   prevHash: string,
   index: number,
-  bitsHex = "1d00ffff"
+  bitsHex = "1d00ffff",
+  time = 1231006505 + index
 ): bsv.Header {
   const buf = Buffer.from(headerHexs[0], "hex");
   Buffer.from(prevHash, "hex").reverse().copy(buf, 4);
-  buf.writeUInt32LE(1231006505 + index, 68);
+  buf.writeUInt32LE(time, 68);
   Buffer.from(bitsHex, "hex").reverse().copy(buf, 72);
   buf.writeUInt32LE(index, 76);
   return {
     prevHash: Buffer.from(prevHash, "hex"),
     bits: Buffer.from(bitsHex, "hex"),
-    time: 1231006505 + index,
+    time,
     toBuffer: () => Buffer.from(buf),
     getHash: (hexStr?: boolean) =>
       hexStr ? hash : Buffer.from(hash, "hex"),
@@ -210,6 +211,50 @@ test("ignores difficulty mismatch for configured ticker fork blocks", () => {
       false
     );
   }
+});
+
+test("validates BCH ASERT difficulty after activation", () => {
+  const genesisHash = getHeaderHash(headerHexs[0]);
+  const anchorHash = syntheticHash(2001);
+  const validAsertHash = syntheticHash(2002);
+  const invalidAsertHash = syntheticHash(2003);
+  const opts = {
+    network: "BCH" as const,
+    validateProofOfWork: false,
+    difficultyExceptionHashes: [anchorHash],
+    cashForkHeight: 1,
+    cashDaaActivationHeight: 1,
+    asertActivationHeight: 2,
+  };
+
+  const accepted = new Headers(opts);
+  assert.equal(
+    accepted.addHeader({
+      header: syntheticHeader(anchorHash, genesisHash, 1, "1c00ffff", 1231007705),
+    }),
+    true
+  );
+  assert.equal(
+    accepted.addHeader({
+      header: syntheticHeader(validAsertHash, anchorHash, 2, "1c01009c"),
+    }),
+    true
+  );
+  assert.equal(accepted.getHash(2), validAsertHash);
+
+  const rejected = new Headers(opts);
+  assert.equal(
+    rejected.addHeader({
+      header: syntheticHeader(anchorHash, genesisHash, 1, "1c00ffff", 1231007705),
+    }),
+    true
+  );
+  assert.equal(
+    rejected.addHeader({
+      header: syntheticHeader(invalidAsertHash, anchorHash, 2, "1c00ffff"),
+    }),
+    false
+  );
 });
 
 test("selects accumulated work over height", () => {

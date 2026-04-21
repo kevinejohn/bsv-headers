@@ -1,6 +1,6 @@
 {
   "name": "bsv-headers",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Determine best-work bitcoin header chain and query block order",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

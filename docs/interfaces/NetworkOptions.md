@@ -10,6 +10,22 @@ Defined in: [index.ts:52](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 ## Properties
 
+### asertActivationHeight?
+
+> `optional` **asertActivationHeight?**: `number`
+
+Defined in: [index.ts:59](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L59)
+
+***
+
+### asertHalfLife?
+
+> `optional` **asertHalfLife?**: `number`
+
+Defined in: [index.ts:60](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L60)
+
+***
+
 ### cashDaaActivationHeight?
 
 > `optional` **cashDaaActivationHeight?**: `number`
@@ -54,7 +70,7 @@ Defined in: [index.ts:54](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **getExpectedBits?**: [`ExpectedBitsFn`](../type-aliases/ExpectedBitsFn.md)
 
-Defined in: [index.ts:64](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L64)
+Defined in: [index.ts:66](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L66)
 
 ***
 
@@ -62,7 +78,7 @@ Defined in: [index.ts:64](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **maxTarget?**: `string` \| `bigint` \| `Buffer`\<`ArrayBufferLike`\>
 
-Defined in: [index.ts:59](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L59)
+Defined in: [index.ts:61](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L61)
 
 ***
 
@@ -78,7 +94,7 @@ Defined in: [index.ts:53](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **retargetInterval?**: `number`
 
-Defined in: [index.ts:61](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L61)
+Defined in: [index.ts:63](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L63)
 
 ***
 
@@ -86,7 +102,7 @@ Defined in: [index.ts:61](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **targetSpacing?**: `number`
 
-Defined in: [index.ts:60](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L60)
+Defined in: [index.ts:62](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L62)
 
 ***
 
@@ -94,7 +110,7 @@ Defined in: [index.ts:60](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **targetTimespan?**: `number`
 
-Defined in: [index.ts:62](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L62)
+Defined in: [index.ts:64](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L64)
 
 ***
 
@@ -102,4 +118,4 @@ Defined in: [index.ts:62](https://github.com/kevinejohn/bsv-headers/blob/master/
 
 > `optional` **validateDifficulty?**: `boolean`
 
-Defined in: [index.ts:63](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L63)
+Defined in: [index.ts:65](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L65)

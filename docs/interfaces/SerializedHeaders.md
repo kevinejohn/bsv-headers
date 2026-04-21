@@ -6,7 +6,7 @@
 
 # Interface: SerializedHeaders
 
-Defined in: [index.ts:110](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L110)
+Defined in: [index.ts:114](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L114)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [index.ts:110](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **chain**: `Record`\<`string`, `string`\>
 
-Defined in: [index.ts:130](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L130)
+Defined in: [index.ts:136](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L136)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [index.ts:130](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **genesis**: `string`
 
-Defined in: [index.ts:127](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L127)
+Defined in: [index.ts:133](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L133)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [index.ts:127](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **headers**: [`SerializedHeaderEntry`](SerializedHeaderEntry.md)[]
 
-Defined in: [index.ts:129](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L129)
+Defined in: [index.ts:135](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L135)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [index.ts:129](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **invalidatedBlock**: `boolean`
 
-Defined in: [index.ts:134](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L134)
+Defined in: [index.ts:140](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L140)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [index.ts:134](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **invalidBlocks**: `string`[]
 
-Defined in: [index.ts:128](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L128)
+Defined in: [index.ts:134](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L134)
 
 ***
 
@@ -54,7 +54,15 @@ Defined in: [index.ts:128](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **options**: `object`
 
-Defined in: [index.ts:112](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L112)
+Defined in: [index.ts:116](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L116)
+
+#### asertActivationHeight?
+
+> `optional` **asertActivationHeight?**: `number`
+
+#### asertHalfLife?
+
+> `optional` **asertHalfLife?**: `number`
 
 #### cashDaaActivationHeight?
 
@@ -114,7 +122,7 @@ Defined in: [index.ts:112](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **processed**: `boolean`
 
-Defined in: [index.ts:133](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L133)
+Defined in: [index.ts:139](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L139)
 
 ***
 
@@ -122,7 +130,7 @@ Defined in: [index.ts:133](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **tip**: `object`
 
-Defined in: [index.ts:132](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L132)
+Defined in: [index.ts:138](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L138)
 
 #### hash
 
@@ -138,7 +146,7 @@ Defined in: [index.ts:132](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **unlinked**: `string`[]
 
-Defined in: [index.ts:131](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L131)
+Defined in: [index.ts:137](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L137)
 
 ***
 
@@ -146,4 +154,4 @@ Defined in: [index.ts:131](https://github.com/kevinejohn/bsv-headers/blob/master
 
 > **version**: `1`
 
-Defined in: [index.ts:111](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L111)
+Defined in: [index.ts:115](https://github.com/kevinejohn/bsv-headers/blob/master/src/index.ts#L115)

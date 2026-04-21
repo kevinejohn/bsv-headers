@@ -56,6 +56,8 @@ export interface NetworkOptions {
   difficultyAlgorithm?: DifficultyAlgorithm;
   cashForkHeight?: number;
   cashDaaActivationHeight?: number;
+  asertActivationHeight?: number;
+  asertHalfLife?: number;
   maxTarget?: string | Buffer | bigint;
   targetSpacing?: number;
   retargetInterval?: number;
@@ -74,6 +76,8 @@ export interface HeadersOptions {
   difficultyAlgorithm?: DifficultyAlgorithm;
   cashForkHeight?: number;
   cashDaaActivationHeight?: number;
+  asertActivationHeight?: number;
+  asertHalfLife?: number;
   targetSpacing?: number;
   retargetInterval?: number;
   targetTimespan?: number;
@@ -122,6 +126,8 @@ export interface SerializedHeaders {
     difficultyAlgorithm: DifficultyAlgorithm;
     cashForkHeight?: number;
     cashDaaActivationHeight?: number;
+    asertActivationHeight?: number;
+    asertHalfLife?: number;
     network?: string;
   };
   genesis: string;
@@ -153,6 +159,8 @@ type ResolvedNetworkOptions = {
   difficultyAlgorithm: DifficultyAlgorithm;
   cashForkHeight?: number;
   cashDaaActivationHeight?: number;
+  asertActivationHeight?: number;
+  asertHalfLife?: number;
   maxTarget?: string | Buffer | bigint;
   targetSpacing: number;
   retargetInterval: number;
@@ -166,6 +174,8 @@ const MAX_UINT256 = TWO ** BigInt(256) - BigInt(1);
 const WORK_BASE = TWO ** BigInt(256);
 const CASH_FORK_HEIGHT = 478559;
 const CASH_DAA_ACTIVATION_HEIGHT = 504032;
+const BCH_ASERT_ACTIVATION_HEIGHT = 661648;
+const BCH_ASERT_HALF_LIFE = 2 * 24 * 60 * 60;
 const ALL_FORK_BLOCK_HASHES = Array.from(
   new Set(Object.values(FORK_BLOCK_HASHES).flat())
 );
@@ -195,6 +205,8 @@ const NETWORKS: Record<NetworkName, ResolvedNetworkOptions> = {
     difficultyAlgorithm: "cash",
     cashForkHeight: CASH_FORK_HEIGHT,
     cashDaaActivationHeight: CASH_DAA_ACTIVATION_HEIGHT,
+    asertActivationHeight: BCH_ASERT_ACTIVATION_HEIGHT,
+    asertHalfLife: BCH_ASERT_HALF_LIFE,
   },
   BSV: {
     ...MAINNET_NETWORK,
@@ -444,6 +456,8 @@ export default class Headers {
   private difficultyAlgorithm: DifficultyAlgorithm;
   private cashForkHeight?: number;
   private cashDaaActivationHeight?: number;
+  private asertActivationHeight?: number;
+  private asertHalfLife?: number;
   private expectedBits?: ExpectedBitsFn;
   private logger?: HeadersLogger;
   private networkName?: string;
@@ -462,6 +476,8 @@ export default class Headers {
       difficultyAlgorithm = network.difficultyAlgorithm,
       cashForkHeight = network.cashForkHeight,
       cashDaaActivationHeight = network.cashDaaActivationHeight,
+      asertActivationHeight = network.asertActivationHeight,
+      asertHalfLife = network.asertHalfLife,
       targetSpacing = network.targetSpacing,
       retargetInterval = network.retargetInterval,
       targetTimespan = network.targetTimespan,
@@ -491,6 +507,8 @@ export default class Headers {
     this.difficultyAlgorithm = difficultyAlgorithm;
     this.cashForkHeight = cashForkHeight;
     this.cashDaaActivationHeight = cashDaaActivationHeight;
+    this.asertActivationHeight = asertActivationHeight;
+    this.asertHalfLife = asertHalfLife;
     this.expectedBits = getExpectedBits;
     this.logger = logger || undefined;
     this.networkName = network.name;
@@ -530,6 +548,9 @@ export default class Headers {
       cashForkHeight: opts.cashForkHeight ?? data.options.cashForkHeight,
       cashDaaActivationHeight:
         opts.cashDaaActivationHeight ?? data.options.cashDaaActivationHeight,
+      asertActivationHeight:
+        opts.asertActivationHeight ?? data.options.asertActivationHeight,
+      asertHalfLife: opts.asertHalfLife ?? data.options.asertHalfLife,
       targetSpacing: opts.targetSpacing ?? data.options.targetSpacing,
       retargetInterval: opts.retargetInterval ?? data.options.retargetInterval,
       targetTimespan: opts.targetTimespan ?? data.options.targetTimespan,
@@ -886,6 +907,8 @@ export default class Headers {
         difficultyAlgorithm: this.difficultyAlgorithm,
         cashForkHeight: this.cashForkHeight,
         cashDaaActivationHeight: this.cashDaaActivationHeight,
+        asertActivationHeight: this.asertActivationHeight,
+        asertHalfLife: this.asertHalfLife,
         network: this.networkName === "mainnet" ? this.networkName : undefined,
       },
       genesis: this.genesis,
@@ -985,6 +1008,12 @@ export default class Headers {
     ) {
       const cashDaaActivationHeight =
         this.cashDaaActivationHeight || CASH_DAA_ACTIVATION_HEIGHT;
+      if (
+        this.asertActivationHeight !== undefined &&
+        entry.height >= this.asertActivationHeight
+      ) {
+        return this.getAsertExpectedBits(prev);
+      }
       if (entry.height >= cashDaaActivationHeight) {
         return this.getCashDaaExpectedBits(prev);
       }
@@ -1081,6 +1110,58 @@ export default class Headers {
     if (projectedWork <= BigInt(0)) return Buffer.from(prev.bits);
 
     let nextTarget = (WORK_BASE - projectedWork) / projectedWork;
+    if (nextTarget > this.maxTarget) nextTarget = this.maxTarget;
+    return targetToCompact(nextTarget);
+  }
+
+  private getAsertExpectedBits(prev: HeaderEntry): Buffer {
+    if (
+      prev.height === undefined ||
+      this.asertActivationHeight === undefined
+    ) {
+      return Buffer.from(prev.bits);
+    }
+
+    const anchorHeight = this.asertActivationHeight - 1;
+    const anchor = getAncestorAtHeight(
+      this.headerEntries,
+      prev.hash,
+      anchorHeight
+    );
+    if (!anchor) return Buffer.from(prev.bits);
+
+    const anchorParent = this.headerEntries[anchor.prev];
+    if (!anchorParent) return Buffer.from(prev.bits);
+
+    const anchorTarget = compactToTarget(anchor.bits);
+    const timeDelta = BigInt(prev.time - anchorParent.time);
+    const heightDelta = BigInt(prev.height - anchorHeight);
+    const halfLife = BigInt(this.asertHalfLife || BCH_ASERT_HALF_LIFE);
+    const radix = BigInt(1 << 16);
+    let exponent =
+      ((timeDelta - BigInt(this.targetSpacing) * (heightDelta + BigInt(1))) *
+        radix) /
+      halfLife;
+    let numShifts = exponent >> BigInt(16);
+    exponent -= numShifts * radix;
+
+    const factor =
+      ((BigInt("195766423245049") * exponent +
+        BigInt("971821376") * exponent ** BigInt(2) +
+        BigInt("5127") * exponent ** BigInt(3) +
+        (BigInt(1) << BigInt(47))) >>
+        BigInt(48)) +
+      radix;
+
+    numShifts -= BigInt(16);
+    let nextTarget = anchorTarget * factor;
+    if (numShifts <= BigInt(0)) {
+      nextTarget >>= -numShifts;
+    } else {
+      nextTarget <<= numShifts;
+    }
+
+    if (nextTarget <= BigInt(0)) return targetToCompact(BigInt(1));
     if (nextTarget > this.maxTarget) nextTarget = this.maxTarget;
     return targetToCompact(nextTarget);
   }

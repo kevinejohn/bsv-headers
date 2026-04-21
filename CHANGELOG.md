@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.4
+
+### Fixed
+
+- Added BCH ASERT DAA validation from activation height `661648`, while leaving BSV on CW-144.
+- Corrected ASERT target calculation to use the previous block timestamp/height relative to the ASERT anchor block.
+- Verified the BCH fixture through height `689649` with zero invalid headers.
+
 ## 3.0.3
 
 ### Added
