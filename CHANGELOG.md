@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.5
+
+### Fixed
+
+- Cached BCH ASERT anchor data during validation so post-ASERT BCH headers do not repeatedly walk back to the activation anchor.
+
 ## 3.0.4
 
 ### Fixed

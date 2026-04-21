@@ -150,6 +150,13 @@ type HeaderEntry = {
   work: bigint;
   chainWork?: bigint;
   height?: number;
+  asertAnchor?: AsertAnchor;
+};
+
+type AsertAnchor = {
+  height: number;
+  parentTime: number;
+  target: bigint;
 };
 
 type ResolvedNetworkOptions = {
@@ -1115,27 +1122,15 @@ export default class Headers {
   }
 
   private getAsertExpectedBits(prev: HeaderEntry): Buffer {
-    if (
-      prev.height === undefined ||
-      this.asertActivationHeight === undefined
-    ) {
+    if (prev.height === undefined) {
       return Buffer.from(prev.bits);
     }
 
-    const anchorHeight = this.asertActivationHeight - 1;
-    const anchor = getAncestorAtHeight(
-      this.headerEntries,
-      prev.hash,
-      anchorHeight
-    );
+    const anchor = this.getAsertAnchor(prev);
     if (!anchor) return Buffer.from(prev.bits);
 
-    const anchorParent = this.headerEntries[anchor.prev];
-    if (!anchorParent) return Buffer.from(prev.bits);
-
-    const anchorTarget = compactToTarget(anchor.bits);
-    const timeDelta = BigInt(prev.time - anchorParent.time);
-    const heightDelta = BigInt(prev.height - anchorHeight);
+    const timeDelta = BigInt(prev.time - anchor.parentTime);
+    const heightDelta = BigInt(prev.height - anchor.height);
     const halfLife = BigInt(this.asertHalfLife || BCH_ASERT_HALF_LIFE);
     const radix = BigInt(1 << 16);
     let exponent =
@@ -1154,7 +1149,7 @@ export default class Headers {
       radix;
 
     numShifts -= BigInt(16);
-    let nextTarget = anchorTarget * factor;
+    let nextTarget = anchor.target * factor;
     if (numShifts <= BigInt(0)) {
       nextTarget >>= -numShifts;
     } else {
@@ -1164,6 +1159,58 @@ export default class Headers {
     if (nextTarget <= BigInt(0)) return targetToCompact(BigInt(1));
     if (nextTarget > this.maxTarget) nextTarget = this.maxTarget;
     return targetToCompact(nextTarget);
+  }
+
+  private getAsertAnchor(prev: HeaderEntry): AsertAnchor | undefined {
+    if (
+      prev.height === undefined ||
+      this.asertActivationHeight === undefined
+    ) {
+      return undefined;
+    }
+
+    const anchorHeight = this.asertActivationHeight - 1;
+    if (prev.height < anchorHeight) return undefined;
+    if (prev.asertAnchor) return prev.asertAnchor;
+
+    const path: HeaderEntry[] = [];
+    const seen = new Set<string>();
+    let header: HeaderEntry | undefined = prev;
+    let anchor: AsertAnchor | undefined;
+
+    while (header) {
+      if (header.asertAnchor) {
+        anchor = header.asertAnchor;
+        break;
+      }
+      if (header.height === anchorHeight) {
+        const anchorParent = this.headerEntries[header.prev];
+        if (!anchorParent) return undefined;
+        anchor = {
+          height: header.height,
+          parentTime: anchorParent.time,
+          target: compactToTarget(header.bits),
+        };
+        header.asertAnchor = anchor;
+        break;
+      }
+      if (
+        header.height === undefined ||
+        header.height < anchorHeight ||
+        seen.has(header.hash)
+      ) {
+        return undefined;
+      }
+      seen.add(header.hash);
+      path.push(header);
+      header = this.headerEntries[header.prev];
+    }
+
+    if (!anchor) return undefined;
+    for (const entry of path) {
+      entry.asertAnchor = anchor;
+    }
+    return anchor;
   }
 
   private deleteHeaderTree(entry: HeaderEntry): void {
